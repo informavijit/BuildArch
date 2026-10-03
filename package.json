@@ -4,6 +4,7 @@
   "description": "100% free workspace architecture & design analyzer. Supports Java, C#/.NET, C/C++, Delphi/Object Pascal, Python, JavaScript, TypeScript, React.js, Angular, Node.js, Dart/Flutter, PowerShell, Perl, Go, Rust, Kotlin, Swift, PHP, Ruby, Shell/Bash, SQL, Docker, Kubernetes, CI/CD, gRPC Proto, OpenAPI.",
   "version": "1.0.0",
   "publisher": "AvijitKumarTewary",
+  "icon": "icon.png",
   "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
