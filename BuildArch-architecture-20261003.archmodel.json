@@ -1,0 +1,2841 @@
+{
+  "schemaVersion": "1.0.0",
+  "workspace": {
+    "name": "BuildArch",
+    "folders": [],
+    "generatedAt": "2026-10-03T16:13:51.865Z",
+    "toolVersion": "0.1.0",
+    "mode": "No AI (rule-based)",
+    "stats": {
+      "totalFiles": 105,
+      "totalLoc": 8723,
+      "analyzedFiles": 0,
+      "skippedFiles": 0,
+      "projectCount": 6,
+      "componentCount": 103,
+      "interfaceCount": 2,
+      "dataStoreCount": 1,
+      "workflowCount": 0,
+      "riskCount": 2
+    }
+  },
+  "projects": [
+    {
+      "id": "project-root",
+      "name": "BuildArch",
+      "type": "web-frontend",
+      "languages": [
+        ".md",
+        ".json",
+        ".js",
+        ".ts",
+        ".css"
+      ],
+      "frameworks": [
+        "Node.js"
+      ],
+      "rootPath": ".",
+      "entryPoints": [],
+      "loc": 8607,
+      "fileCount": 95
+    },
+    {
+      "id": "project-test-fixtures-delphi-project",
+      "name": "delphi-project",
+      "type": "web-frontend",
+      "languages": [
+        ".dfm",
+        ".pas",
+        ".dpr"
+      ],
+      "frameworks": [
+        "Delphi VCL/FMX"
+      ],
+      "rootPath": "test/fixtures/delphi-project",
+      "entryPoints": [],
+      "loc": 48,
+      "fileCount": 3
+    },
+    {
+      "id": "project-test-fixtures-multi-service-suite",
+      "name": "multi-service-suite",
+      "type": "infra",
+      "languages": [
+        ".yml"
+      ],
+      "frameworks": [
+        "Docker"
+      ],
+      "rootPath": "test/fixtures/multi-service-suite",
+      "entryPoints": [],
+      "loc": 10,
+      "fileCount": 1
+    },
+    {
+      "id": "project-test-fixtures-multi-service-suite-flutter-app",
+      "name": "flutter-app",
+      "type": "mobile",
+      "languages": [
+        ".dart",
+        ".yaml"
+      ],
+      "frameworks": [
+        "Flutter"
+      ],
+      "rootPath": "test/fixtures/multi-service-suite/flutter-app",
+      "entryPoints": [],
+      "loc": 33,
+      "fileCount": 2
+    },
+    {
+      "id": "project-test-fixtures-multi-service-suite-node-api",
+      "name": "node-api",
+      "type": "web-frontend",
+      "languages": [
+        ".json",
+        ".ts"
+      ],
+      "frameworks": [
+        "Node.js"
+      ],
+      "rootPath": "test/fixtures/multi-service-suite/node-api",
+      "entryPoints": [],
+      "loc": 14,
+      "fileCount": 2
+    },
+    {
+      "id": "project-test-fixtures-multi-service-suite-python-service",
+      "name": "python-service",
+      "type": "backend-api",
+      "languages": [
+        ".py",
+        ".txt"
+      ],
+      "frameworks": [
+        "Python"
+      ],
+      "rootPath": "test/fixtures/multi-service-suite/python-service",
+      "entryPoints": [],
+      "loc": 11,
+      "fileCount": 2
+    }
+  ],
+  "components": [
+    {
+      "id": "comp-delphi-mainform",
+      "name": "Mainform",
+      "type": "Form",
+      "projectId": "project-test-fixtures-delphi-project",
+      "layer": "presentation",
+      "paths": [
+        "test/fixtures/delphi-project/MainForm.pas",
+        "test/fixtures/delphi-project/MainForm.dfm"
+      ],
+      "publicSymbols": [
+        "FormMain: TFormMain",
+        "ButtonSubmit: TButton",
+        "FDConnection1: TFDConnection",
+        "MainForm",
+        "TFormMain"
+      ],
+      "loc": 29,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/fixtures/delphi-project/MainForm.dfm"
+        },
+        {
+          "file": "test/fixtures/delphi-project/MainForm.pas"
+        }
+      ],
+      "language": "Delphi"
+    },
+    {
+      "id": "comp-py-test-fixtures-multi-service-suite-python-service-main-py",
+      "name": "main",
+      "type": "API Routes / Views",
+      "projectId": "project-test-fixtures-multi-service-suite-python-service",
+      "layer": "presentation",
+      "paths": [
+        "test/fixtures/multi-service-suite/python-service/main.py"
+      ],
+      "publicSymbols": [],
+      "loc": 8,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/python-service/main.py"
+        }
+      ],
+      "language": "Python"
+    },
+    {
+      "id": "comp-js-scratch-generate_sample_report-js",
+      "name": "generate_sample_report",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "scratch/generate_sample_report.js"
+      ],
+      "publicSymbols": [],
+      "loc": 26,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "scratch/generate_sample_report.js"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-ai-budget-ts",
+      "name": "budget",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/ai/budget.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 33,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/ai/budget.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-ai-prompts-ts",
+      "name": "prompts",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/ai/prompts.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 17,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/ai/prompts.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-ai-provider-ts",
+      "name": "provider",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/ai/provider.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 14,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/ai/provider.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-ai-vscodeLm-ts",
+      "name": "vscodeLm",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/ai/vscodeLm.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 74,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/ai/vscodeLm.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-analyzer-ts",
+      "name": "analyzer",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/analyzer.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 19,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/analyzer.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-ci-ts",
+      "name": "ci",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/ci.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 22,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/ci.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-config-ts",
+      "name": "config",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/config.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 44,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/config.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-cpp-ts",
+      "name": "cpp",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/cpp.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 45,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/cpp.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-dart-ts",
+      "name": "dart",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/dart.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 69,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/dart.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-delphi-ts",
+      "name": "delphi",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/delphi.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 133,
+      "fanIn": 0,
+      "fanOut": 6,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/delphi.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-discovery-ts",
+      "name": "discovery",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/discovery.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 176,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/discovery.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-docker-ts",
+      "name": "docker",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/docker.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 44,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/docker.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-dotnet-ts",
+      "name": "dotnet",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/dotnet.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 81,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/dotnet.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-generic-fallback-ts",
+      "name": "generic-fallback",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/generic-fallback.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 69,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/generic-fallback.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-go-rust-kotlin-swift-php-ruby-ts",
+      "name": "go-rust-kotlin-swift-php-ruby",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/go-rust-kotlin-swift-php-ruby.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 45,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/go-rust-kotlin-swift-php-ruby.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-java-ts",
+      "name": "java",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/java.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 70,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/java.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-javascript-typescript-ts",
+      "name": "javascript-typescript",
+      "type": "React Component",
+      "projectId": "project-root",
+      "layer": "presentation",
+      "paths": [
+        "src/analyzers/javascript-typescript.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 92,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/javascript-typescript.ts"
+        }
+      ],
+      "language": "React.js"
+    },
+    {
+      "id": "comp-js-src-analyzers-k8s-ts",
+      "name": "k8s",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/k8s.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 20,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/k8s.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-openapi-ts",
+      "name": "openapi",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/openapi.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 28,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/openapi.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-perl-ts",
+      "name": "perl",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/perl.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 57,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/perl.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-powershell-ts",
+      "name": "powershell",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/powershell.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 57,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/powershell.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-proto-ts",
+      "name": "proto",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/proto.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 32,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/proto.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-python-ts",
+      "name": "python",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/python.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 68,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/python.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-shell-ts",
+      "name": "shell",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/shell.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 42,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/shell.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-analyzers-sql-ts",
+      "name": "sql",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/analyzers/sql.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 36,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/analyzers/sql.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-extension-ts",
+      "name": "extension",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/extension.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 123,
+      "fanIn": 0,
+      "fanOut": 5,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/extension.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-graph-crossLanguage-ts",
+      "name": "crossLanguage",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/graph/crossLanguage.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 77,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/graph/crossLanguage.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-graph-cycles-ts",
+      "name": "cycles",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/graph/cycles.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 67,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/graph/cycles.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-graph-dependencyGraph-ts",
+      "name": "dependencyGraph",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/graph/dependencyGraph.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 23,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/graph/dependencyGraph.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-graph-metrics-ts",
+      "name": "metrics",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/graph/metrics.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/graph/metrics.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-graph-workflows-ts",
+      "name": "workflows",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/graph/workflows.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 74,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/graph/workflows.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-languages-adapter-ts",
+      "name": "adapter",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/languages/adapter.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 10,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/languages/adapter.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-languages-comment-stripper-ts",
+      "name": "comment-stripper",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/languages/comment-stripper.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 220,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/languages/comment-stripper.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-languages-encoding-ts",
+      "name": "encoding",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/languages/encoding.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 48,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/languages/encoding.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-languages-regex-engine-ts",
+      "name": "regex-engine",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/languages/regex-engine.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 159,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/languages/regex-engine.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-model-archModel-ts",
+      "name": "archModel",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/model/archModel.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 246,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/model/archModel.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-pipeline-orchestrator-ts",
+      "name": "orchestrator",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/pipeline/orchestrator.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 161,
+      "fanIn": 0,
+      "fanOut": 30,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/pipeline/orchestrator.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-renderer-ts",
+      "name": "renderer",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/renderer.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 96,
+      "fanIn": 0,
+      "fanOut": 18,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/renderer.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-allComponents-ts",
+      "name": "allComponents",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/allComponents.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 23,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/allComponents.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-appendix-ts",
+      "name": "appendix",
+      "type": "Node.js REST Route / Controller",
+      "projectId": "project-root",
+      "layer": "presentation",
+      "paths": [
+        "src/report/sections/appendix.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 39,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/appendix.ts"
+        }
+      ],
+      "language": "Node.js / Express"
+    },
+    {
+      "id": "comp-js-src-report-sections-architecture-ts",
+      "name": "architecture",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/architecture.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 50,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/architecture.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-crossCutting-ts",
+      "name": "crossCutting",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/crossCutting.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 27,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/crossCutting.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-dataArchitecture-ts",
+      "name": "dataArchitecture",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/dataArchitecture.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 47,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/dataArchitecture.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-deployment-ts",
+      "name": "deployment",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/deployment.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 32,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/deployment.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-interfaces-ts",
+      "name": "interfaces",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/interfaces.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 34,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/interfaces.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-inventory-ts",
+      "name": "inventory",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/inventory.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 38,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/inventory.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-keyComponents-ts",
+      "name": "keyComponents",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/keyComponents.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 18,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/keyComponents.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-overview-ts",
+      "name": "overview",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/overview.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/overview.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-quality-ts",
+      "name": "quality",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/quality.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 34,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/quality.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-relationships-ts",
+      "name": "relationships",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/relationships.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 42,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/relationships.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-techStack-ts",
+      "name": "techStack",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/techStack.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 20,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/techStack.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-sections-workflows-ts",
+      "name": "workflows",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/sections/workflows.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 11,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/sections/workflows.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-svg-diagrams-ts",
+      "name": "diagrams",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/svg/diagrams.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 72,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/svg/diagrams.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-templates-components-ts",
+      "name": "components",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/templates/components.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 142,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/templates/components.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-templates-design-system-css-ts",
+      "name": "design-system.css",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/templates/design-system.css.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 413,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/templates/design-system.css.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-report-templates-extension-css-ts",
+      "name": "extension.css",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/report/templates/extension.css.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 25,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/report/templates/extension.css.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-util-escape-ts",
+      "name": "escape",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/util/escape.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 15,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/util/escape.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-util-fs-ts",
+      "name": "fs",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/util/fs.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 63,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/util/fs.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-util-ignore-ts",
+      "name": "ignore",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/util/ignore.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 44,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/util/ignore.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-src-util-redact-ts",
+      "name": "redact",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "src/util/redact.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 38,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "src/util/redact.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-fixtures-multi-service-suite-node-api-src-index-ts",
+      "name": "index",
+      "type": "Node.js REST Route / Controller",
+      "projectId": "project-root",
+      "layer": "presentation",
+      "paths": [
+        "test/fixtures/multi-service-suite/node-api/src/index.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 6,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": true,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/node-api/src/index.ts"
+        }
+      ],
+      "language": "Node.js / Express"
+    },
+    {
+      "id": "comp-js-test-unit-aiEnrichment-test-ts",
+      "name": "aiEnrichment.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/aiEnrichment.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 56,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/aiEnrichment.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-commentStripper-test-ts",
+      "name": "commentStripper.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/commentStripper.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 33,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/commentStripper.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-crossLanguage-test-ts",
+      "name": "crossLanguage.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/crossLanguage.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 76,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/crossLanguage.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-delphiDfm-test-ts",
+      "name": "delphiDfm.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/delphiDfm.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 18,
+      "fanIn": 0,
+      "fanOut": 3,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/delphiDfm.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-encoding-test-ts",
+      "name": "encoding.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/encoding.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 15,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/encoding.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-graphWorkflows-test-ts",
+      "name": "graphWorkflows.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/graphWorkflows.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 48,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/graphWorkflows.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-htmlReport-test-ts",
+      "name": "htmlReport.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/htmlReport.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 48,
+      "fanIn": 0,
+      "fanOut": 4,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/htmlReport.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-model-test-ts",
+      "name": "model.test",
+      "type": "Repository / Model",
+      "projectId": "project-root",
+      "layer": "data",
+      "paths": [
+        "test/unit/model.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 12,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/model.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-test-unit-redact-test-ts",
+      "name": "redact.test",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "test/unit/redact.test.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 15,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/unit/redact.test.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-js-vitest-config-ts",
+      "name": "vitest.config",
+      "type": "JavaScript Module",
+      "projectId": "project-root",
+      "layer": "application",
+      "paths": [
+        "vitest.config.ts"
+      ],
+      "publicSymbols": [],
+      "loc": 8,
+      "fanIn": 0,
+      "fanOut": 1,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "vitest.config.ts"
+        }
+      ],
+      "language": "Node.js / JS"
+    },
+    {
+      "id": "comp-dart-test-fixtures-multi-service-suite-flutter-app-lib-main-dart",
+      "name": "main",
+      "type": "Flutter Screen / Widget",
+      "projectId": "project-test-fixtures-multi-service-suite-flutter-app",
+      "layer": "presentation",
+      "paths": [
+        "test/fixtures/multi-service-suite/flutter-app/lib/main.dart"
+      ],
+      "publicSymbols": [
+        "MyApp",
+        "MyApp"
+      ],
+      "loc": 23,
+      "fanIn": 0,
+      "fanOut": 2,
+      "hasTests": true,
+      "isKey": true,
+      "confidence": "Extracted",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/flutter-app/lib/main.dart"
+        }
+      ],
+      "language": "Dart/Flutter"
+    },
+    {
+      "id": "comp-gen--vscodeignore",
+      "name": ".vscodeignore",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        ".vscodeignore"
+      ],
+      "publicSymbols": [],
+      "loc": 11,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": ".vscodeignore"
+        }
+      ],
+      "language": "Generic"
+    },
+    {
+      "id": "comp-gen-CHANGELOG-md",
+      "name": "CHANGELOG",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "CHANGELOG.md"
+      ],
+      "publicSymbols": [],
+      "loc": 9,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "CHANGELOG.md"
+        }
+      ],
+      "language": ".md"
+    },
+    {
+      "id": "comp-gen-LICENSE",
+      "name": "LICENSE",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "LICENSE"
+      ],
+      "publicSymbols": [],
+      "loc": 17,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "LICENSE"
+        }
+      ],
+      "language": "Generic"
+    },
+    {
+      "id": "comp-gen-package-lock-json",
+      "name": "package-lock",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "package-lock.json"
+      ],
+      "publicSymbols": [],
+      "loc": 2326,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "package-lock.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-package-json",
+      "name": "package",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "package.json"
+      ],
+      "publicSymbols": [],
+      "loc": 156,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "package.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-README-md",
+      "name": "README",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "README.md"
+      ],
+      "publicSymbols": [],
+      "loc": 40,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "README.md"
+        }
+      ],
+      "language": ".md"
+    },
+    {
+      "id": "comp-gen-Requirements-BuildArch_extension_prompt-md",
+      "name": "BuildArch_extension_prompt",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "Requirements/BuildArch_extension_prompt.md"
+      ],
+      "publicSymbols": [],
+      "loc": 657,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "Requirements/BuildArch_extension_prompt.md"
+        }
+      ],
+      "language": ".md"
+    },
+    {
+      "id": "comp-gen-src-model-schema-json",
+      "name": "schema",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/model/schema.json"
+      ],
+      "publicSymbols": [],
+      "loc": 38,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/model/schema.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-report-templates-design-system-css",
+      "name": "design-system",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/report/templates/design-system.css"
+      ],
+      "publicSymbols": [],
+      "loc": 358,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/report/templates/design-system.css"
+        }
+      ],
+      "language": ".css"
+    },
+    {
+      "id": "comp-gen-src-report-templates-extension-css",
+      "name": "extension",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/report/templates/extension.css"
+      ],
+      "publicSymbols": [],
+      "loc": 23,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/report/templates/extension.css"
+        }
+      ],
+      "language": ".css"
+    },
+    {
+      "id": "comp-gen-src-rules-cpp-json",
+      "name": "cpp",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/cpp.json"
+      ],
+      "publicSymbols": [],
+      "loc": 62,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/cpp.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-csharp-json",
+      "name": "csharp",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/csharp.json"
+      ],
+      "publicSymbols": [],
+      "loc": 62,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/csharp.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-dart-json",
+      "name": "dart",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/dart.json"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/dart.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-dfm-json",
+      "name": "dfm",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/dfm.json"
+      ],
+      "publicSymbols": [],
+      "loc": 27,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/dfm.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-generic-json",
+      "name": "generic",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/generic.json"
+      ],
+      "publicSymbols": [],
+      "loc": 20,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/generic.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-java-json",
+      "name": "java",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/java.json"
+      ],
+      "publicSymbols": [],
+      "loc": 62,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/java.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-js-ts-json",
+      "name": "js-ts",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/js-ts.json"
+      ],
+      "publicSymbols": [],
+      "loc": 86,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/js-ts.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-pascal-json",
+      "name": "pascal",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/pascal.json"
+      ],
+      "publicSymbols": [],
+      "loc": 54,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/pascal.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-perl-json",
+      "name": "perl",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/perl.json"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/perl.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-powershell-json",
+      "name": "powershell",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/powershell.json"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/powershell.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-python-json",
+      "name": "python",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/python.json"
+      ],
+      "publicSymbols": [],
+      "loc": 41,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/python.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-shell-json",
+      "name": "shell",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/shell.json"
+      ],
+      "publicSymbols": [],
+      "loc": 27,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/shell.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-src-rules-sql-json",
+      "name": "sql",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "src/rules/sql.json"
+      ],
+      "publicSymbols": [],
+      "loc": 34,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "src/rules/sql.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-test-fixtures-delphi-project-Project1-dpr",
+      "name": "Project1",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "test/fixtures/delphi-project/Project1.dpr"
+      ],
+      "publicSymbols": [],
+      "loc": 10,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "test/fixtures/delphi-project/Project1.dpr"
+        }
+      ],
+      "language": ".dpr"
+    },
+    {
+      "id": "comp-gen-test-fixtures-multi-service-suite-docker-compose-yml",
+      "name": "docker-compose",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "test/fixtures/multi-service-suite/docker-compose.yml"
+      ],
+      "publicSymbols": [],
+      "loc": 10,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/docker-compose.yml"
+        }
+      ],
+      "language": ".yml"
+    },
+    {
+      "id": "comp-gen-test-fixtures-multi-service-suite-flutter-app-pubspec-yaml",
+      "name": "pubspec",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "test/fixtures/multi-service-suite/flutter-app/pubspec.yaml"
+      ],
+      "publicSymbols": [],
+      "loc": 10,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/flutter-app/pubspec.yaml"
+        }
+      ],
+      "language": ".yaml"
+    },
+    {
+      "id": "comp-gen-test-fixtures-multi-service-suite-node-api-package-json",
+      "name": "package",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "test/fixtures/multi-service-suite/node-api/package.json"
+      ],
+      "publicSymbols": [],
+      "loc": 8,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": true,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "test/fixtures/multi-service-suite/node-api/package.json"
+        }
+      ],
+      "language": ".json"
+    },
+    {
+      "id": "comp-gen-tsconfig-json",
+      "name": "tsconfig",
+      "type": "Source File",
+      "projectId": "project-root",
+      "layer": "domain",
+      "paths": [
+        "tsconfig.json"
+      ],
+      "publicSymbols": [],
+      "loc": 19,
+      "fanIn": 0,
+      "fanOut": 0,
+      "hasTests": false,
+      "isKey": false,
+      "confidence": "Inferred",
+      "evidence": [
+        {
+          "file": "tsconfig.json"
+        }
+      ],
+      "language": ".json"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "rel-delphi-dll-mainform-17",
+      "fromId": "comp-delphi-mainform",
+      "toId": "external-NativeHelper.dll",
+      "kind": "native-dll",
+      "label": "P/Invoke DLL external call: NativeHelper.dll",
+      "evidence": [
+        {
+          "file": "test/fixtures/delphi-project/MainForm.pas",
+          "line": 17,
+          "snippet": "function CallNativeLibrary(lpParam: PChar): Integer; stdcall; external 'NativeHelper.dll';"
+        }
+      ],
+      "confidence": "Extracted"
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "iface-py-test/fixtures/multi-service-suite/python-service/main.py-5",
+      "projectId": "project-test-fixtures-multi-service-suite-python-service",
+      "kind": "rest",
+      "method": "GET",
+      "path": "/analytics",
+      "handler": "main./analytics",
+      "file": "test/fixtures/multi-service-suite/python-service/main.py",
+      "line": 5
+    },
+    {
+      "id": "iface-js-test/fixtures/multi-service-suite/node-api/src/index.ts-5",
+      "projectId": "project-root",
+      "kind": "rest",
+      "method": "GET",
+      "path": "/orders",
+      "handler": "index./orders",
+      "file": "test/fixtures/multi-service-suite/node-api/src/index.ts",
+      "line": 5
+    }
+  ],
+  "dataStores": [
+    {
+      "id": "datastore-mainform-15",
+      "name": "FDConnection1",
+      "kind": "relational",
+      "technology": "TFDConnection",
+      "usedBy": [
+        "comp-delphi-mainform"
+      ],
+      "models": [],
+      "evidence": [
+        {
+          "file": "test/fixtures/delphi-project/MainForm.dfm",
+          "line": 15,
+          "snippet": "object FDConnection1: TFDConnection"
+        }
+      ]
+    }
+  ],
+  "integrations": [],
+  "workflows": [],
+  "deployment": {
+    "artifacts": [
+      {
+        "name": "docker-compose.yml",
+        "type": "docker",
+        "path": "test/fixtures/multi-service-suite/docker-compose.yml",
+        "details": "Multi-container Docker Compose topology specification"
+      },
+      {
+        "name": "k8s.ts",
+        "type": "k8s",
+        "path": "src/analyzers/k8s.ts",
+        "details": "Kubernetes / Helm infrastructure specification"
+      }
+    ],
+    "environments": [],
+    "pipelines": [],
+    "topology": [
+      "Service: node-api (Docker Compose)",
+      "Service: python-service (Docker Compose)"
+    ]
+  },
+  "crossCutting": {
+    "auth": [],
+    "logging": [],
+    "errorHandling": [],
+    "config": [],
+    "testing": [],
+    "observability": []
+  },
+  "quality": {
+    "cycles": [],
+    "hotspots": [
+      {
+        "componentId": "comp-gen-package-lock-json",
+        "reason": "God Component risk: 2326 LOC, 0 public symbols."
+      },
+      {
+        "componentId": "comp-gen-Requirements-BuildArch_extension_prompt-md",
+        "reason": "God Component risk: 657 LOC, 0 public symbols."
+      }
+    ],
+    "untested": [
+      "comp-delphi-mainform",
+      "comp-js-scratch-generate_sample_report-js",
+      "comp-js-src-ai-budget-ts",
+      "comp-js-src-ai-prompts-ts",
+      "comp-js-src-ai-provider-ts",
+      "comp-js-src-ai-vscodeLm-ts",
+      "comp-js-src-analyzers-analyzer-ts",
+      "comp-js-src-analyzers-ci-ts",
+      "comp-js-src-analyzers-config-ts",
+      "comp-js-src-analyzers-cpp-ts",
+      "comp-js-src-analyzers-dart-ts",
+      "comp-js-src-analyzers-delphi-ts",
+      "comp-js-src-analyzers-discovery-ts",
+      "comp-js-src-analyzers-docker-ts",
+      "comp-js-src-analyzers-dotnet-ts",
+      "comp-js-src-analyzers-generic-fallback-ts",
+      "comp-js-src-analyzers-go-rust-kotlin-swift-php-ruby-ts",
+      "comp-js-src-analyzers-java-ts",
+      "comp-js-src-analyzers-javascript-typescript-ts",
+      "comp-js-src-analyzers-k8s-ts",
+      "comp-js-src-analyzers-openapi-ts",
+      "comp-js-src-analyzers-perl-ts",
+      "comp-js-src-analyzers-powershell-ts",
+      "comp-js-src-analyzers-proto-ts",
+      "comp-js-src-analyzers-python-ts",
+      "comp-js-src-analyzers-shell-ts",
+      "comp-js-src-analyzers-sql-ts",
+      "comp-js-src-extension-ts",
+      "comp-js-src-graph-crossLanguage-ts",
+      "comp-js-src-graph-cycles-ts",
+      "comp-js-src-graph-dependencyGraph-ts",
+      "comp-js-src-graph-metrics-ts",
+      "comp-js-src-graph-workflows-ts",
+      "comp-js-src-languages-adapter-ts",
+      "comp-js-src-languages-comment-stripper-ts",
+      "comp-js-src-languages-encoding-ts",
+      "comp-js-src-languages-regex-engine-ts",
+      "comp-js-src-model-archModel-ts",
+      "comp-js-src-pipeline-orchestrator-ts",
+      "comp-js-src-report-renderer-ts",
+      "comp-js-src-report-sections-allComponents-ts",
+      "comp-js-src-report-sections-appendix-ts",
+      "comp-js-src-report-sections-architecture-ts",
+      "comp-js-src-report-sections-crossCutting-ts",
+      "comp-js-src-report-sections-dataArchitecture-ts",
+      "comp-js-src-report-sections-deployment-ts",
+      "comp-js-src-report-sections-interfaces-ts",
+      "comp-js-src-report-sections-inventory-ts",
+      "comp-js-src-report-sections-keyComponents-ts",
+      "comp-js-src-report-sections-overview-ts",
+      "comp-js-src-report-sections-quality-ts",
+      "comp-js-src-report-sections-relationships-ts",
+      "comp-js-src-report-sections-techStack-ts",
+      "comp-js-src-report-sections-workflows-ts",
+      "comp-js-src-report-svg-diagrams-ts",
+      "comp-js-src-report-templates-components-ts",
+      "comp-js-src-report-templates-design-system-css-ts",
+      "comp-js-src-report-templates-extension-css-ts",
+      "comp-js-src-util-escape-ts",
+      "comp-js-src-util-fs-ts",
+      "comp-js-src-util-ignore-ts",
+      "comp-js-src-util-redact-ts",
+      "comp-gen--vscodeignore",
+      "comp-gen-CHANGELOG-md",
+      "comp-gen-LICENSE",
+      "comp-gen-package-lock-json",
+      "comp-gen-package-json",
+      "comp-gen-README-md",
+      "comp-gen-Requirements-BuildArch_extension_prompt-md",
+      "comp-gen-src-model-schema-json",
+      "comp-gen-src-report-templates-design-system-css",
+      "comp-gen-src-report-templates-extension-css",
+      "comp-gen-src-rules-cpp-json",
+      "comp-gen-src-rules-csharp-json",
+      "comp-gen-src-rules-dart-json",
+      "comp-gen-src-rules-dfm-json",
+      "comp-gen-src-rules-generic-json",
+      "comp-gen-src-rules-java-json",
+      "comp-gen-src-rules-js-ts-json",
+      "comp-gen-src-rules-pascal-json",
+      "comp-gen-src-rules-perl-json",
+      "comp-gen-src-rules-powershell-json",
+      "comp-gen-src-rules-python-json",
+      "comp-gen-src-rules-shell-json",
+      "comp-gen-src-rules-sql-json",
+      "comp-gen-tsconfig-json"
+    ],
+    "risks": [
+      {
+        "id": "risk-god-comp-gen-package-lock-json",
+        "severity": "medium",
+        "category": "god-component",
+        "title": "God Component Hotspot: package-lock",
+        "description": "Component 'package-lock' has high LOC (2326) and large public surface area (0 symbols), making it difficult to maintain and test.",
+        "affectedComponents": [
+          "comp-gen-package-lock-json"
+        ],
+        "evidence": [
+          {
+            "file": "package-lock.json"
+          }
+        ]
+      },
+      {
+        "id": "risk-god-comp-gen-Requirements-BuildArch_extension_prompt-md",
+        "severity": "medium",
+        "category": "god-component",
+        "title": "God Component Hotspot: BuildArch_extension_prompt",
+        "description": "Component 'BuildArch_extension_prompt' has high LOC (657) and large public surface area (0 symbols), making it difficult to maintain and test.",
+        "affectedComponents": [
+          "comp-gen-Requirements-BuildArch_extension_prompt-md"
+        ],
+        "evidence": [
+          {
+            "file": "Requirements/BuildArch_extension_prompt.md"
+          }
+        ]
+      }
+    ],
+    "metrics": {
+      "averageLocPerComponent": 85,
+      "maxFanInComponent": "Mainform",
+      "maxFanOutComponent": "orchestrator",
+      "testCoverageRatio": 0.17
+    }
+  },
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "dependencies": []
+  },
+  "unsupportedFiles": [
+    {
+      "extension": "(no extension)",
+      "languageId": "unknown",
+      "count": 2,
+      "loc": 28,
+      "analyzed": false
+    },
+    {
+      "extension": ".md",
+      "languageId": "md",
+      "count": 3,
+      "loc": 706,
+      "analyzed": false
+    },
+    {
+      "extension": ".json",
+      "languageId": "json",
+      "count": 18,
+      "loc": 3145,
+      "analyzed": true
+    },
+    {
+      "extension": ".js",
+      "languageId": "js",
+      "count": 1,
+      "loc": 26,
+      "analyzed": true
+    },
+    {
+      "extension": ".ts",
+      "languageId": "ts",
+      "count": 71,
+      "loc": 4335,
+      "analyzed": true
+    },
+    {
+      "extension": ".css",
+      "languageId": "css",
+      "count": 2,
+      "loc": 381,
+      "analyzed": false
+    },
+    {
+      "extension": ".dfm",
+      "languageId": "dfm",
+      "count": 1,
+      "loc": 18,
+      "analyzed": true
+    },
+    {
+      "extension": ".pas",
+      "languageId": "pas",
+      "count": 1,
+      "loc": 20,
+      "analyzed": true
+    },
+    {
+      "extension": ".dpr",
+      "languageId": "dpr",
+      "count": 1,
+      "loc": 10,
+      "analyzed": true
+    },
+    {
+      "extension": ".yml",
+      "languageId": "yml",
+      "count": 1,
+      "loc": 10,
+      "analyzed": true
+    },
+    {
+      "extension": ".dart",
+      "languageId": "dart",
+      "count": 1,
+      "loc": 23,
+      "analyzed": true
+    },
+    {
+      "extension": ".yaml",
+      "languageId": "yaml",
+      "count": 1,
+      "loc": 10,
+      "analyzed": true
+    },
+    {
+      "extension": ".py",
+      "languageId": "py",
+      "count": 1,
+      "loc": 8,
+      "analyzed": true
+    },
+    {
+      "extension": ".txt",
+      "languageId": "txt",
+      "count": 1,
+      "loc": 3,
+      "analyzed": false
+    }
+  ]
+}

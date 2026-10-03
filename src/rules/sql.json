@@ -1,0 +1,34 @@
+{
+  "language": "sql",
+  "extensions": [".sql", ".prc", ".pks", ".pkb"],
+  "rules": [
+    {
+      "id": "sql-create-table",
+      "kind": "data",
+      "pattern": "\\bCREATE\\s+TABLE\\s+(?:IF\\s+NOT\\s+EXISTS\\s+)?([a-zA-Z0-9_\".]+)",
+      "captureGroups": { "name": 1, "type": "Table" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "sql-create-view",
+      "kind": "data",
+      "pattern": "\\bCREATE\\s+(?:OR\\s+REPLACE\\s+)?VIEW\\s+([a-zA-Z0-9_\".]+)",
+      "captureGroups": { "name": 1, "type": "View" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "sql-create-proc",
+      "kind": "declaration",
+      "pattern": "\\bCREATE\\s+(?:OR\\s+REPLACE\\s+)?(?:PROCEDURE|FUNCTION|PACKAGE)\\s+([a-zA-Z0-9_\".]+)",
+      "captureGroups": { "name": 1, "type": "Procedure" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "sql-foreign-key",
+      "kind": "data",
+      "pattern": "\\bFOREIGN\\s+KEY\\s*\\([^)]+\\)\\s*REFERENCES\\s+([a-zA-Z0-9_\".]+)",
+      "captureGroups": { "name": 1, "type": "ForeignKey" },
+      "confidence": "Extracted"
+    }
+  ]
+}

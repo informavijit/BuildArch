@@ -1,0 +1,62 @@
+{
+  "language": "cpp",
+  "extensions": [".c", ".cc", ".cpp", ".cxx", ".h", ".hpp"],
+  "rules": [
+    {
+      "id": "cpp-include-local",
+      "kind": "import",
+      "pattern": "^\\s*#include\\s+\"([^\"]+)\"",
+      "captureGroups": { "name": 1, "type": "local-include" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-include-system",
+      "kind": "import",
+      "pattern": "^\\s*#include\\s+<([^>]+)>",
+      "captureGroups": { "name": 1, "type": "system-include" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-namespace",
+      "kind": "declaration",
+      "pattern": "^\\s*namespace\\s+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 1, "type": "namespace" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-class",
+      "kind": "declaration",
+      "pattern": "\\b(class|struct)\\s+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 2, "type": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-extern-c",
+      "kind": "external",
+      "pattern": "extern\\s+\"C\"\\s*(?:__declspec\\(dllexport\\))?",
+      "captureGroups": { "name": "extern C" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-dllexport",
+      "kind": "external",
+      "pattern": "__declspec\\(dllexport\\)\\s+(?:[a-zA-Z0-9_*]+\\s+)+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 1, "type": "DLL Export" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "qt-qobject",
+      "kind": "declaration",
+      "pattern": "\\bQ_OBJECT\\b",
+      "captureGroups": { "name": "Qt Q_OBJECT" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "cpp-main",
+      "kind": "entry",
+      "pattern": "\\b(int|void)\\s+(main|WinMain|DllMain)\\s*\\(",
+      "captureGroups": { "name": 2 },
+      "confidence": "Extracted"
+    }
+  ]
+}

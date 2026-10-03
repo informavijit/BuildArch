@@ -1,0 +1,41 @@
+{
+  "language": "python",
+  "extensions": [".py"],
+  "rules": [
+    {
+      "id": "py-import",
+      "kind": "import",
+      "pattern": "^\\s*(?:from\\s+([a-zA-Z0-9_.]+)\\s+import|import\\s+([a-zA-Z0-9_.,\\s]+))",
+      "captureGroups": { "name": 1, "detail": 2 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "py-class",
+      "kind": "declaration",
+      "pattern": "^\\s*class\\s+([a-zA-Z0-9_]+)(?:\\(([^)]+)\\))?:",
+      "captureGroups": { "name": 1, "detail": 2, "type": "class" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "fastapi-flask-route",
+      "kind": "route",
+      "pattern": "@(?:app|router|api)\\.(get|post|put|delete|patch|route)\\s*\\(\\s*[\"']([^\"']+)[\"']",
+      "captureGroups": { "name": 2, "method": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "sqlalchemy-model",
+      "kind": "data",
+      "pattern": "class\\s+([a-zA-Z0-9_]+)\\s*\\(.*?(?:Base|Model).*?\\):",
+      "captureGroups": { "name": 1, "type": "SQLAlchemy Model" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "py-main",
+      "kind": "entry",
+      "pattern": "if\\s+__name__\\s*==\\s*[\"']__main__[\"']:",
+      "captureGroups": { "name": "__main__" },
+      "confidence": "Extracted"
+    }
+  ]
+}

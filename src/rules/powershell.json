@@ -1,0 +1,41 @@
+{
+  "language": "powershell",
+  "extensions": [".ps1", ".psm1", ".psd1"],
+  "rules": [
+    {
+      "id": "ps-function",
+      "kind": "declaration",
+      "pattern": "^\\s*function\\s+([a-zA-Z0-9_-]+)",
+      "captureGroups": { "name": 1, "type": "function" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "ps-import-module",
+      "kind": "import",
+      "pattern": "\\bImport-Module\\s+(?:-Name\\s+)?['\"]?([a-zA-Z0-9._-]+)['\"]?",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "ps-dotsource",
+      "kind": "import",
+      "pattern": "^\\s*\\.\\s+['\"]?(\\.[^'\"]+\\.ps1)['\"]?",
+      "captureGroups": { "name": 1, "type": "dot-source" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "ps-rest-call",
+      "kind": "external",
+      "pattern": "\\b(?:Invoke-RestMethod|Invoke-WebRequest)\\s+(?:-Uri\\s+)?['\"]([^'\"]+)['\"]",
+      "captureGroups": { "name": 1, "type": "REST Call" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "ps-executable-call",
+      "kind": "external",
+      "pattern": "&\\s*['\"]?([a-zA-Z0-9_.-]+\\.(?:exe|cmd|bat))['\"]?",
+      "captureGroups": { "name": 1, "type": "Process Call" },
+      "confidence": "Extracted"
+    }
+  ]
+}

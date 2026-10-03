@@ -1,0 +1,20 @@
+{
+  "language": "generic",
+  "extensions": [],
+  "rules": [
+    {
+      "id": "generic-import",
+      "kind": "import",
+      "pattern": "^\\s*(?:import|include|require|uses|source)\\s+['\"]?([a-zA-Z0-9_./-]+)['\"]?",
+      "captureGroups": { "name": 1 },
+      "confidence": "Inferred"
+    },
+    {
+      "id": "generic-class-func",
+      "kind": "declaration",
+      "pattern": "^\\s*(?:class|struct|interface|function|def|sub|func|procedure)\\s+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 1 },
+      "confidence": "Inferred"
+    }
+  ]
+}

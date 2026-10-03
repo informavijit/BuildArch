@@ -1,0 +1,156 @@
+{
+  "name": "buildarch",
+  "displayName": "BuildArch",
+  "description": "100% free workspace architecture & design analyzer. Supports Java, C#/.NET, C/C++, Delphi/Object Pascal, Python, JavaScript, TypeScript, React.js, Angular, Node.js, Dart/Flutter, PowerShell, Perl, Go, Rust, Kotlin, Swift, PHP, Ruby, Shell/Bash, SQL, Docker, Kubernetes, CI/CD, gRPC Proto, OpenAPI.",
+  "version": "1.0.0",
+  "publisher": "AvijitKumarTewary",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "activationEvents": [
+    "onCommand:buildarch.workspace",
+    "onCommand:buildarch.workspaceAi",
+    "onCommand:buildarch.openLastReport"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "buildarch.workspace",
+        "title": "BuildArch: Workspace",
+        "category": "BuildArch"
+      },
+      {
+        "command": "buildarch.workspaceAi",
+        "title": "BuildArch: Workspace AI",
+        "category": "BuildArch"
+      },
+      {
+        "command": "buildarch.openLastReport",
+        "title": "BuildArch: Open Last Report",
+        "category": "BuildArch"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "BuildArch",
+      "properties": {
+        "buildarch.include": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["**/*"],
+          "description": "Glob patterns to include in workspace architecture analysis."
+        },
+        "buildarch.exclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "**/node_modules/**",
+            "**/build/**",
+            "**/dist/**",
+            "**/.dart_tool/**",
+            "**/.git/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/target/**",
+            "**/venv/**",
+            "**/.idea/**"
+          ],
+          "description": "Glob patterns to exclude from workspace architecture analysis."
+        },
+        "buildarch.maxFiles": {
+          "type": "number",
+          "default": 20000,
+          "description": "Maximum number of files to process."
+        },
+        "buildarch.maxFileSizeKB": {
+          "type": "number",
+          "default": 512,
+          "description": "Maximum file size in KB to analyze in detail."
+        },
+        "buildarch.ai.provider": {
+          "type": "string",
+          "enum": ["vscode-lm", "openai", "custom"],
+          "default": "vscode-lm",
+          "description": "AI provider model for BuildArch: Workspace AI."
+        },
+        "buildarch.ai.maxTokens": {
+          "type": "number",
+          "default": 10000,
+          "description": "Maximum token budget cap for AI enrichment."
+        },
+        "buildarch.ai.dryRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, show estimated tokens and prompt for confirmation before executing AI enrichment."
+        },
+        "buildarch.languages.enabled": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["*"],
+          "description": "Enabled language IDs for analysis (* for all)."
+        },
+        "buildarch.customRulePacks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "File paths to custom regex rule-pack JSON files."
+        },
+        "buildarch.encoding.fallback": {
+          "type": "string",
+          "default": "windows-1252",
+          "description": "Fallback text encoding when UTF-8 decoding fails."
+        },
+        "buildarch.report.title": {
+          "type": "string",
+          "default": "Workspace Architecture & Design Report",
+          "description": "Custom title for generated HTML architecture reports."
+        },
+        "buildarch.report.theme": {
+          "type": "string",
+          "enum": ["dark", "light"],
+          "default": "dark",
+          "description": "Default visual theme for generated report."
+        },
+        "buildarch.report.includeFilePaths": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include relative file paths and evidence line numbers in generated report."
+        },
+        "buildarch.report.redactSecrets": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically redact potential secret values and tokens in report."
+        },
+        "buildarch.report.saveArchModel": {
+          "type": "boolean",
+          "default": true,
+          "description": "Save accompanying .archmodel.json alongside HTML report."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "compile": "tsc -p . --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.6.3"
+  }
+}

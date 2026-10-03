@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BuildArchModel",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "workspace",
+    "projects",
+    "components",
+    "relationships",
+    "interfaces",
+    "dataStores",
+    "integrations",
+    "workflows",
+    "deployment",
+    "crossCutting",
+    "quality",
+    "techStack"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "workspace": {
+      "type": "object",
+      "required": ["name", "generatedAt", "toolVersion", "mode", "stats"]
+    },
+    "projects": { "type": "array" },
+    "components": { "type": "array" },
+    "relationships": { "type": "array" },
+    "interfaces": { "type": "array" },
+    "dataStores": { "type": "array" },
+    "integrations": { "type": "array" },
+    "workflows": { "type": "array" },
+    "deployment": { "type": "object" },
+    "crossCutting": { "type": "object" },
+    "quality": { "type": "object" },
+    "techStack": { "type": "object" }
+  }
+}

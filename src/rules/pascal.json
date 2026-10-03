@@ -1,0 +1,54 @@
+{
+  "language": "pascal",
+  "extensions": [".pas", ".dpr", ".dpk", ".inc"],
+  "rules": [
+    {
+      "id": "delphi-unit",
+      "kind": "declaration",
+      "pattern": "^\\s*(?:unit|program|package)\\s+([a-zA-Z0-9_]+)\\s*;",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "delphi-uses",
+      "kind": "import",
+      "pattern": "\\buses\\b\\s*([^;]+);",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "delphi-class",
+      "kind": "declaration",
+      "pattern": "^\\s*([a-zA-Z0-9_]+)\\s*=\\s*class\\s*(?:\\(([^)]+)\\))?",
+      "flags": "gi",
+      "captureGroups": { "name": 1, "detail": 2 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "delphi-external-dll",
+      "kind": "external",
+      "pattern": "\\bexternal\\s+['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "delphi-firedac-conn",
+      "kind": "data",
+      "pattern": "\\b(TFDConnection|TADOConnection|TSQLConnection|TClientDataSet|TFDQuery|TADOQuery)\\b",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "delphi-indy-rest",
+      "kind": "external",
+      "pattern": "\\b(TIdHTTP|TIdTCPClient|TRESTClient|TRESTRequest)\\b",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "language": "perl",
+  "extensions": [".pl", ".pm", ".t"],
+  "rules": [
+    {
+      "id": "perl-package",
+      "kind": "declaration",
+      "pattern": "^\\s*package\\s+([a-zA-Z0-9_:]+)\\s*;",
+      "captureGroups": { "name": 1, "type": "package" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "perl-use",
+      "kind": "import",
+      "pattern": "^\\s*(?:use|require)\\s+([a-zA-Z0-9_:]+)",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "perl-sub",
+      "kind": "declaration",
+      "pattern": "^\\s*sub\\s+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 1, "type": "subroutine" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "perl-dbi",
+      "kind": "data",
+      "pattern": "\\bDBI->connect\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "captureGroups": { "name": 1, "type": "DBI Connection" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "perl-system-call",
+      "kind": "external",
+      "pattern": "\\b(?:system|exec)\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "captureGroups": { "name": 1, "type": "System Call" },
+      "confidence": "Extracted"
+    }
+  ]
+}

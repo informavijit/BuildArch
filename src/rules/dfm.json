@@ -1,0 +1,27 @@
+{
+  "language": "dfm",
+  "extensions": [".dfm", ".fmx"],
+  "rules": [
+    {
+      "id": "dfm-object",
+      "kind": "declaration",
+      "pattern": "^\\s*(?:object|inherited|inline)\\s+([a-zA-Z0-9_]+):\\s*([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 1, "type": 2 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "dfm-event-binding",
+      "kind": "route",
+      "pattern": "^\\s*(On[a-zA-Z0-9_]+)\\s*=\\s*([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 2, "detail": 1, "type": "event-handler" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "dfm-db-property",
+      "kind": "data",
+      "pattern": "^\\s*(Connection|DataSource|CommandText|SQL\\.Strings)\\s*=\\s*(.+)",
+      "captureGroups": { "name": 2, "detail": 1, "type": "db-property" },
+      "confidence": "Extracted"
+    }
+  ]
+}

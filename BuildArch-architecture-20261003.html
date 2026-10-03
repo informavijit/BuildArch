@@ -1,0 +1,3500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildArch - Architecture &amp; Design Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+
+  :root {
+    --orange: #FF6B35;
+    --yellow: #FFD23F;
+    --purple: #8B5CF6;
+    --blue: #3B82F6;
+    --green: #10B981;
+    --red: #EF4444;
+    --dark: #0B0B14;
+    --dark2: #141424;
+    --dark3: #1F1F38;
+    --dark4: #2A2A4A;
+    --text: #F0F0FA;
+    --muted: #9AA0C0;
+    --border: rgba(255,255,255,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,107,53,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,107,53,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,107,53,0.14);
+    border: 1px solid rgba(255,107,53,0.35);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(255,107,53,0.15);
+  }
+
+  .header h1 {
+    font-size: clamp(30px, 4.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #FF6B35, #FFD23F, #8B5CF6, #3B82F6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 920px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #A0A5C8;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .arch-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .arch-row {
+    display: grid;
+    gap: 16px;
+  }
+
+  .row-4 { grid-template-columns: repeat(4, 1fr); }
+  .row-3 { grid-template-columns: repeat(3, 1fr); }
+  .row-2 { grid-template-columns: repeat(2, 1fr); }
+  .row-2-1 { grid-template-columns: 2fr 1fr; }
+  .row-1-2 { grid-template-columns: 1fr 2fr; }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .card.orange::before { background: linear-gradient(90deg, var(--orange), var(--yellow)); }
+  .card.purple::before { background: linear-gradient(90deg, var(--purple), #60A5FA); }
+  .card.green::before  { background: linear-gradient(90deg, var(--green), #34D399); }
+  .card.blue::before   { background: linear-gradient(90deg, var(--blue), #818CF8); }
+  .card.red::before    { background: linear-gradient(90deg, var(--red), #F97316); }
+  .card.yellow::before { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+
+  .card-icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .card-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--orange);
+    margin-top: 10px;
+    opacity: 0.9;
+    word-break: break-all;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tag-orange { background: rgba(255,107,53,0.18); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+  .tag-purple { background: rgba(139,92,246,0.18); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+  .tag-green  { background: rgba(16,185,129,0.18); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .tag-blue   { background: rgba(59,130,246,0.18); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .tag-yellow { background: rgba(255,210,63,0.18); color: var(--yellow); border: 1px solid rgba(255,210,63,0.3); }
+  .tag-red    { background: rgba(239,68,68,0.18); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+
+  .card-wide { grid-column: 1 / -1; }
+
+  .arrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .arrow-down svg { opacity: 0.6; }
+
+  .hub {
+    background: linear-gradient(135deg, rgba(139,92,246,0.18), rgba(59,130,246,0.18));
+    border: 1px solid rgba(139,92,246,0.35);
+    border-radius: 22px;
+    padding: 26px 30px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(139,92,246,0.12);
+  }
+
+  .hub::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--blue), var(--purple));
+  }
+
+  .hub-icon {
+    font-size: 52px;
+    flex-shrink: 0;
+  }
+
+  .hub-content {
+    flex: 1;
+  }
+
+  .hub-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+  }
+
+  .hub-desc {
+    font-size: 12px;
+    color: #D0D4F0;
+    line-height: 1.8;
+  }
+
+  .hub-meta {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .hub-pill {
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .state-item {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+
+  .state-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 4px;
+  }
+
+  .state-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .ext-card {
+    background: var(--dark3);
+    border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: transform 0.2s;
+  }
+
+  .ext-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .ext-icon { font-size: 32px; flex-shrink: 0; }
+  .ext-title { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px; }
+  .ext-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .ext-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-free { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .badge-device { background: rgba(59,130,246,0.2); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .badge-local { background: rgba(255,210,63,0.2); color: var(--yellow); border: 1px solid rgba(255,210,63,0.3); }
+
+  .flow-diagram {
+    background: linear-gradient(180deg, rgba(20,20,36,0.95), rgba(15,15,28,0.98));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .flow-bubble {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 22px;
+    font-weight: 800;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  .b-orange { background: rgba(255,107,53,0.25); color: var(--orange); }
+  .b-yellow { background: rgba(255,210,63,0.25); color: var(--yellow); }
+  .b-purple { background: rgba(139,92,246,0.25); color: var(--purple); }
+  .b-blue   { background: rgba(59,130,246,0.25); color: var(--blue); }
+  .b-green  { background: rgba(16,185,129,0.25); color: var(--green); }
+  .b-red    { background: rgba(239,68,68,0.25); color: var(--red); }
+
+  .flow-step-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+  }
+
+  .flow-step-sub {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .flow-arrow {
+    align-self: center;
+    font-size: 24px;
+    color: rgba(255,255,255,0.35);
+    padding-top: 8px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 20px;
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .footer {
+    margin-top: 48px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+  }
+
+  @media (max-width: 980px) {
+    .row-4, .row-3, .row-2, .row-2-1, .row-1-2,
+    .arrows-4, .arrows-3, .arrows-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .flow-steps {
+      flex-direction: column;
+    }
+
+    .flow-arrow {
+      transform: rotate(90deg);
+      padding-top: 0;
+    }
+
+    .hub {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+
+
+.toc { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; margin-bottom: 28px;
+  background: rgba(15,15,26,0.92); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 14px; }
+.toc a { font-size: 11px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 999px; }
+.toc a:hover { color: var(--text); background: var(--dark3); }
+.search { width: 100%; max-width: 420px; background: var(--dark2); border: 1px solid var(--border); border-radius: 999px;
+  padding: 8px 16px; color: var(--text); font-family: 'Sora', sans-serif; font-size: 12px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.stat { background: var(--dark2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; text-align: center; }
+.stat-num { font-size: 26px; font-weight: 800; background: linear-gradient(135deg, var(--orange), var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+table.data { width: 100%; border-collapse: collapse; font-size: 11px; background: var(--dark2); border-radius: 14px; overflow: hidden; }
+table.data th { text-align: left; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 10px 12px; background: var(--dark3); }
+table.data td { padding: 9px 12px; border-top: 1px solid var(--border); color: var(--text); vertical-align: top; }
+.table-scroll { overflow-x: auto; }
+.chip-high { background: rgba(239,68,68,0.15); color: var(--red); }
+.chip-med { background: rgba(255,210,63,0.15); color: var(--yellow); }
+.chip-low { background: rgba(16,185,129,0.15); color: var(--green); }
+.badge-ai { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: rgba(139,92,246,0.25); color: var(--purple); margin-left: 6px; }
+.badge-conf { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,0.08); color: var(--muted); margin-left: 6px; }
+details.section > summary { cursor: pointer; list-style: none; padding: 12px 0; }
+.diagram { background: var(--dark2); border: 1px solid var(--border); border-radius: 18px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+:root[data-theme="light"] { --dark:#F6F6FB; --dark2:#FFFFFF; --dark3:#ECECF5; --dark4:#E0E0EE; --text:#1A1A2E; --muted:#5A5A78; --border:rgba(0,0,0,0.10); }
+@media print { body::before, .toc, .search { display: none; } .card:hover { transform: none; box-shadow: none; } .page { padding: 16px; } }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="toc">
+      <a href="#overview">1. Overview</a>
+      <a href="#inventory">2. Inventory</a>
+      <a href="#architecture">3. Architecture</a>
+      <a href="#key-components">4. Key Components</a>
+      <a href="#all-components">5. All Components</a>
+      <a href="#relationships">6. Dependencies</a>
+      <a href="#interfaces">7. APIs</a>
+      <a href="#data-architecture">8. Data</a>
+      <a href="#workflows">9. Workflows</a>
+      <a href="#deployment">10. Deployment</a>
+      <a href="#cross-cutting">11. Cross-Cutting</a>
+      <a href="#quality">12. Quality &amp; Risks</a>
+      <a href="#tech-stack">13. Tech Stack</a>
+      <a href="#appendix">14. Appendix</a>
+      <button onclick="toggleTheme()" style="margin-left:auto; background:var(--dark3); border:1px solid var(--border); color:var(--text); padding:4px 10px; border-radius:999px; cursor:pointer; font-size:11px;">🌓 Theme</button>
+    </nav>
+
+    
+    <div class="header">
+      <div class="header-badge">🏛️ BuildArch • Architecture &amp; Design Report • No AI (rule-based)</div>
+      <h1>Workspace Architecture Report</h1>
+      <div class="header-sub">Comprehensive report for BuildArch with 6 project(s) and 106 component(s).</div>
+    </div>
+  
+
+    
+    <details class="section" open id="overview">
+      <summary><div class="section-label">1. Executive Overview</div></summary>
+      <div style="margin-bottom: 24px;">
+        <p class="card-desc" style="font-size: 13px; line-height: 1.8;">Architecture analyzed deterministically via rule-based discovery engines.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">106</div>
+          <div class="stat-label">Components</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">16,540</div>
+          <div class="stat-label">Total LOC</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2</div>
+          <div class="stat-label">Endpoints / APIs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">1</div>
+          <div class="stat-label">Data Stores</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Identified Risks</div>
+        </div>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="inventory">
+      <summary><div class="section-label">2. Workspace Inventory</div></summary>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Type</th>
+              <th>Languages</th>
+              <th>Frameworks</th>
+              <th>LOC</th>
+              <th>Files</th>
+              <th>Root Path</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><strong>BuildArch</strong></td>
+      <td><span class="tag tag-orange">web-frontend</span></td>
+      <td>.json, .html, .md, .js, .ts</td>
+      <td>Node.js</td>
+      <td>16,424</td>
+      <td>98</td>
+      <td><code>.</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>delphi-project</strong></td>
+      <td><span class="tag tag-orange">web-frontend</span></td>
+      <td>.dfm, .pas, .dpr</td>
+      <td>Delphi VCL/FMX</td>
+      <td>48</td>
+      <td>3</td>
+      <td><code>test/fixtures/delphi-project</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>multi-service-suite</strong></td>
+      <td><span class="tag tag-orange">infra</span></td>
+      <td>.yml</td>
+      <td>Docker</td>
+      <td>10</td>
+      <td>1</td>
+      <td><code>test/fixtures/multi-service-suite</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>flutter-app</strong></td>
+      <td><span class="tag tag-orange">mobile</span></td>
+      <td>.dart, .yaml</td>
+      <td>Flutter</td>
+      <td>33</td>
+      <td>2</td>
+      <td><code>test/fixtures/multi-service-suite/flutter-app</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>node-api</strong></td>
+      <td><span class="tag tag-orange">web-frontend</span></td>
+      <td>.json, .ts</td>
+      <td>Node.js</td>
+      <td>14</td>
+      <td>2</td>
+      <td><code>test/fixtures/multi-service-suite/node-api</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>python-service</strong></td>
+      <td><span class="tag tag-orange">backend-api</span></td>
+      <td>.py, .txt</td>
+      <td>Python</td>
+      <td>11</td>
+      <td>2</td>
+      <td><code>test/fixtures/multi-service-suite/python-service</code></td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="architecture">
+      <summary><div class="section-label">3. System Architecture (Layered View)</div></summary>
+      
+      <div class="diagram">
+        
+    <svg width="100%" height="400" viewBox="0 0 1100 400" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#0F0F1A" rx="12" />
+      <text x="20" y="60" fill="#FF6B35" font-family="Sora" font-size="12" font-weight="700" text-transform="uppercase">PRESENTATION</text>
+
+        <g transform="translate(180, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Mainform</text>
+        </g>
+      
+
+        <g transform="translate(325, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">main</text>
+        </g>
+      
+
+        <g transform="translate(470, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">javascript-typ</text>
+        </g>
+      
+
+        <g transform="translate(615, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">appendix</text>
+        </g>
+      
+
+        <g transform="translate(760, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">index</text>
+        </g>
+      
+
+        <g transform="translate(905, 40)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FF6B35" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">main</text>
+        </g>
+      
+<text x="20" y="125" fill="#8B5CF6" font-family="Sora" font-size="12" font-weight="700" text-transform="uppercase">APPLICATION</text>
+
+        <g transform="translate(180, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">esbuild</text>
+        </g>
+      
+
+        <g transform="translate(325, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">generate_sampl</text>
+        </g>
+      
+
+        <g transform="translate(470, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">budget</text>
+        </g>
+      
+
+        <g transform="translate(615, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">prompts</text>
+        </g>
+      
+
+        <g transform="translate(760, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">provider</text>
+        </g>
+      
+
+        <g transform="translate(905, 105)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#8B5CF6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">vscodeLm</text>
+        </g>
+      
+<text x="20" y="190" fill="#3B82F6" font-family="Sora" font-size="12" font-weight="700" text-transform="uppercase">DOMAIN</text>
+
+        <g transform="translate(180, 170)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#3B82F6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">.vscodeignore</text>
+        </g>
+      
+
+        <g transform="translate(325, 170)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#3B82F6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">CHANGELOG</text>
+        </g>
+      
+
+        <g transform="translate(470, 170)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#3B82F6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">LICENSE</text>
+        </g>
+      
+
+        <g transform="translate(615, 170)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#3B82F6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">README</text>
+        </g>
+      
+
+        <g transform="translate(760, 170)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#3B82F6" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">BuildArch Exte</text>
+        </g>
+      
+<text x="20" y="255" fill="#10B981" font-family="Sora" font-size="12" font-weight="700" text-transform="uppercase">DATA</text>
+
+        <g transform="translate(180, 235)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#10B981" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">model.test</text>
+        </g>
+      
+<text x="20" y="320" fill="#FFD23F" font-family="Sora" font-size="12" font-weight="700" text-transform="uppercase">INFRASTRUCTURE</text>
+
+        <g transform="translate(180, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">BuildArch Arch</text>
+        </g>
+      
+
+        <g transform="translate(325, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Package Lock</text>
+        </g>
+      
+
+        <g transform="translate(470, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Package</text>
+        </g>
+      
+
+        <g transform="translate(615, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Schema</text>
+        </g>
+      
+
+        <g transform="translate(760, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Cpp</text>
+        </g>
+      
+
+        <g transform="translate(905, 300)">
+          <rect width="130" height="36" rx="8" fill="#171728" stroke="#FFD23F" stroke-width="1.5" />
+          <text x="12" y="22" fill="#ECECF5" font-family="Sora" font-size="11" font-weight="600">Csharp</text>
+        </g>
+      
+    </svg>
+  
+      </div>
+
+      <div class="arch-wrapper">
+        <div class="arch-row row-3">
+          
+    <div class="card orange" data-search="Mainform Form test/fixtures/delphi-project/MainForm.pas test/fixtures/delphi-project/MainForm.dfm">
+      <span class="card-icon">📱</span>
+      <div class="card-title">Mainform <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">Mainform provides Form capabilities within the presentation layer. Exports: FormMain: TFormMain, ButtonSubmit: TButton, FDConnection1: TFDConnection. Total LOC: 29, Fan-In: 0, Fan-Out: 1.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">FormMain: TFormMain</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">ButtonSubmit: TButton</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">FDConnection1: TFDConnection</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">MainForm</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">test/fixtures/delphi-project/MainForm.pas</div>
+      <div class="tags">
+        <span class="tag tag-orange">Form</span>
+        <span class="tag tag-purple">Delphi</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="main API Routes / Views test/fixtures/multi-service-suite/python-service/main.py">
+      <span class="card-icon">📱</span>
+      <div class="card-title">main <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">main provides API Routes / Views capabilities within the presentation layer. Total LOC: 8, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/python-service/main.py</div>
+      <div class="tags">
+        <span class="tag tag-orange">API Routes / Views</span>
+        <span class="tag tag-purple">Python</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="javascript-typescript React Component src/analyzers/javascript-typescript.ts">
+      <span class="card-icon">📱</span>
+      <div class="card-title">javascript-typescript <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">javascript-typescript provides React Component capabilities within the presentation layer. Total LOC: 92, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/javascript-typescript.ts</div>
+      <div class="tags">
+        <span class="tag tag-orange">React Component</span>
+        <span class="tag tag-purple">React.js</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+        </div>
+
+        
+    <div class="arrow-row">
+      <div class="arrow-down">
+        <svg width="16" height="24" viewBox="0 0 16 24"><path d="M8 0v20M2 14l6 8 6-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>HTTPS / REST / RPC Requests &amp;amp; UI Events</span>
+      </div>
+    </div>
+  
+
+        
+    <div class="hub">
+      <div class="hub-icon">⚡</div>
+      <div class="hub-content">
+        <div class="hub-title">cpp</div>
+        <div class="hub-desc">Central Orchestration Hub for BuildArch. Coordinates domain logic, application state, and external interfaces.</div>
+        
+    <div class="state-grid">
+      
+        <div class="state-item">
+          <div class="state-name">GET /analytics</div>
+          <div class="state-desc">Handler: main./analytics (test/fixtures/multi-service-suite/python-service/main.py)</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">GET /orders</div>
+          <div class="state-desc">Handler: index./orders (test/fixtures/multi-service-suite/node-api/src/index.ts)</div>
+        </div>
+      
+    </div>
+  
+        <div class="hub-meta"><span class="hub-pill" style="background:rgba(139,92,246,0.2);color:var(--purple)">GET /analytics</span>
+<span class="hub-pill" style="background:rgba(139,92,246,0.2);color:var(--purple)">GET /orders</span></div>
+      </div>
+    </div>
+  
+
+        
+    <div class="arrow-row">
+      <div class="arrow-down">
+        <svg width="16" height="24" viewBox="0 0 16 24"><path d="M8 0v20M2 14l6 8 6-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>Domain Logic Processing &amp;amp; Service Orchestration</span>
+      </div>
+    </div>
+  
+
+        <div class="arch-row row-3">
+          
+    <div class="card purple" data-search="esbuild JavaScript Module esbuild.js">
+      <span class="card-icon">⚙️</span>
+      <div class="card-title">esbuild  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">esbuild provides JavaScript Module capabilities within the application layer. Total LOC: 30, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">esbuild.js</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="generate_sample_report JavaScript Module scratch/generate_sample_report.js">
+      <span class="card-icon">⚙️</span>
+      <div class="card-title">generate_sample_report  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">generate_sample_report provides JavaScript Module capabilities within the application layer. Total LOC: 26, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">scratch/generate_sample_report.js</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="budget JavaScript Module src/ai/budget.ts">
+      <span class="card-icon">⚙️</span>
+      <div class="card-title">budget  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">budget provides JavaScript Module capabilities within the application layer. Total LOC: 33, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/ai/budget.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+        </div>
+
+        
+    <div class="arrow-row">
+      <div class="arrow-down">
+        <svg width="16" height="24" viewBox="0 0 16 24"><path d="M8 0v20M2 14l6 8 6-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>SQL / ORM / Data Persistence &amp;amp; Integrations</span>
+      </div>
+    </div>
+  
+
+        <div class="arch-row row-3">
+          
+    <div class="ext-card">
+      <div class="ext-icon">🗄️</div>
+      <div>
+        <div class="ext-title">FDConnection1</div>
+        <div class="ext-desc">Technology: TFDConnection. Data store module.</div>
+        <span class="ext-badge badge-local">RELATIONAL</span>
+      </div>
+    </div>
+  
+        </div>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="key-components">
+      <summary><div class="section-label">4. Key Components</div></summary>
+      <div class="arch-row row-3">
+        
+    <div class="card orange" data-search="Mainform Form test/fixtures/delphi-project/MainForm.pas test/fixtures/delphi-project/MainForm.dfm">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">Mainform <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">Mainform provides Form capabilities within the presentation layer. Exports: FormMain: TFormMain, ButtonSubmit: TButton, FDConnection1: TFDConnection. Total LOC: 29, Fan-In: 0, Fan-Out: 1.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">FormMain: TFormMain</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">ButtonSubmit: TButton</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">FDConnection1: TFDConnection</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">MainForm</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">test/fixtures/delphi-project/MainForm.pas</div>
+      <div class="tags">
+        <span class="tag tag-orange">Form</span>
+        <span class="tag tag-purple">Delphi</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="main API Routes / Views test/fixtures/multi-service-suite/python-service/main.py">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">main <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">main provides API Routes / Views capabilities within the presentation layer. Total LOC: 8, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/python-service/main.py</div>
+      <div class="tags">
+        <span class="tag tag-orange">API Routes / Views</span>
+        <span class="tag tag-purple">Python</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="cpp JavaScript Module src/analyzers/cpp.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">cpp <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">cpp provides JavaScript Module capabilities within the application layer. Total LOC: 45, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/cpp.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dart JavaScript Module src/analyzers/dart.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">dart <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dart provides JavaScript Module capabilities within the application layer. Total LOC: 69, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/dart.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="delphi JavaScript Module src/analyzers/delphi.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">delphi <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">delphi provides JavaScript Module capabilities within the application layer. Total LOC: 133, Fan-In: 0, Fan-Out: 6.</div>
+      
+      <div class="card-file">src/analyzers/delphi.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dotnet JavaScript Module src/analyzers/dotnet.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">dotnet <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dotnet provides JavaScript Module capabilities within the application layer. Total LOC: 81, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/dotnet.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="java JavaScript Module src/analyzers/java.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">java <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">java provides JavaScript Module capabilities within the application layer. Total LOC: 70, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/java.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="javascript-typescript React Component src/analyzers/javascript-typescript.ts">
+      <span class="card-icon">⭐</span>
+      <div class="card-title">javascript-typescript <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">javascript-typescript provides React Component capabilities within the presentation layer. Total LOC: 92, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/javascript-typescript.ts</div>
+      <div class="tags">
+        <span class="tag tag-orange">React Component</span>
+        <span class="tag tag-purple">React.js</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="all-components">
+      <summary><div class="section-label">5. All Components Catalog</div></summary>
+      <div style="margin-bottom: 16px;">
+        <input type="text" class="search" id="compSearch" placeholder="🔍 Search components by name, path or tag..." onkeyup="filterComponents()" />
+      </div>
+      <div class="arch-row row-3" id="compContainer">
+        
+    <div class="card orange" data-search="Mainform Form test/fixtures/delphi-project/MainForm.pas test/fixtures/delphi-project/MainForm.dfm">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Mainform <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">Mainform provides Form capabilities within the presentation layer. Exports: FormMain: TFormMain, ButtonSubmit: TButton, FDConnection1: TFDConnection. Total LOC: 29, Fan-In: 0, Fan-Out: 1.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">FormMain: TFormMain</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">ButtonSubmit: TButton</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">FDConnection1: TFDConnection</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">MainForm</div>
+          <div class="state-desc">Exported symbol in Mainform</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">test/fixtures/delphi-project/MainForm.pas</div>
+      <div class="tags">
+        <span class="tag tag-orange">Form</span>
+        <span class="tag tag-purple">Delphi</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="main API Routes / Views test/fixtures/multi-service-suite/python-service/main.py">
+      <span class="card-icon">📦</span>
+      <div class="card-title">main <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">main provides API Routes / Views capabilities within the presentation layer. Total LOC: 8, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/python-service/main.py</div>
+      <div class="tags">
+        <span class="tag tag-orange">API Routes / Views</span>
+        <span class="tag tag-purple">Python</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="esbuild JavaScript Module esbuild.js">
+      <span class="card-icon">📦</span>
+      <div class="card-title">esbuild  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">esbuild provides JavaScript Module capabilities within the application layer. Total LOC: 30, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">esbuild.js</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="generate_sample_report JavaScript Module scratch/generate_sample_report.js">
+      <span class="card-icon">📦</span>
+      <div class="card-title">generate_sample_report  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">generate_sample_report provides JavaScript Module capabilities within the application layer. Total LOC: 26, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">scratch/generate_sample_report.js</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="budget JavaScript Module src/ai/budget.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">budget  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">budget provides JavaScript Module capabilities within the application layer. Total LOC: 33, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/ai/budget.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="prompts JavaScript Module src/ai/prompts.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">prompts  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">prompts provides JavaScript Module capabilities within the application layer. Total LOC: 17, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/ai/prompts.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="provider JavaScript Module src/ai/provider.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">provider  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">provider provides JavaScript Module capabilities within the application layer. Total LOC: 14, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/ai/provider.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="vscodeLm JavaScript Module src/ai/vscodeLm.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">vscodeLm  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">vscodeLm provides JavaScript Module capabilities within the application layer. Total LOC: 74, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/ai/vscodeLm.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="analyzer JavaScript Module src/analyzers/analyzer.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">analyzer  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">analyzer provides JavaScript Module capabilities within the application layer. Total LOC: 19, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/analyzer.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="ci JavaScript Module src/analyzers/ci.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">ci  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">ci provides JavaScript Module capabilities within the application layer. Total LOC: 22, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/ci.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="config JavaScript Module src/analyzers/config.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">config  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">config provides JavaScript Module capabilities within the application layer. Total LOC: 44, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/analyzers/config.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="cpp JavaScript Module src/analyzers/cpp.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">cpp <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">cpp provides JavaScript Module capabilities within the application layer. Total LOC: 45, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/cpp.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dart JavaScript Module src/analyzers/dart.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">dart <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dart provides JavaScript Module capabilities within the application layer. Total LOC: 69, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/dart.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="delphi JavaScript Module src/analyzers/delphi.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">delphi <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">delphi provides JavaScript Module capabilities within the application layer. Total LOC: 133, Fan-In: 0, Fan-Out: 6.</div>
+      
+      <div class="card-file">src/analyzers/delphi.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="discovery JavaScript Module src/analyzers/discovery.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">discovery  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">discovery provides JavaScript Module capabilities within the application layer. Total LOC: 176, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/analyzers/discovery.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="docker JavaScript Module src/analyzers/docker.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">docker  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">docker provides JavaScript Module capabilities within the application layer. Total LOC: 44, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/docker.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dotnet JavaScript Module src/analyzers/dotnet.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">dotnet <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dotnet provides JavaScript Module capabilities within the application layer. Total LOC: 81, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/dotnet.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="generic-fallback JavaScript Module src/analyzers/generic-fallback.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">generic-fallback  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">generic-fallback provides JavaScript Module capabilities within the application layer. Total LOC: 69, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/analyzers/generic-fallback.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="go-rust-kotlin-swift-php-ruby JavaScript Module src/analyzers/go-rust-kotlin-swift-php-ruby.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">go-rust-kotlin-swift-php-ruby  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">go-rust-kotlin-swift-php-ruby provides JavaScript Module capabilities within the application layer. Total LOC: 45, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/analyzers/go-rust-kotlin-swift-php-ruby.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="java JavaScript Module src/analyzers/java.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">java <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">java provides JavaScript Module capabilities within the application layer. Total LOC: 70, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/java.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="javascript-typescript React Component src/analyzers/javascript-typescript.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">javascript-typescript <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">javascript-typescript provides React Component capabilities within the presentation layer. Total LOC: 92, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/javascript-typescript.ts</div>
+      <div class="tags">
+        <span class="tag tag-orange">React Component</span>
+        <span class="tag tag-purple">React.js</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="k8s JavaScript Module src/analyzers/k8s.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">k8s  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">k8s provides JavaScript Module capabilities within the application layer. Total LOC: 20, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/k8s.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="openapi JavaScript Module src/analyzers/openapi.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">openapi  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">openapi provides JavaScript Module capabilities within the application layer. Total LOC: 28, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/openapi.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="perl JavaScript Module src/analyzers/perl.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">perl <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">perl provides JavaScript Module capabilities within the application layer. Total LOC: 57, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/perl.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="powershell JavaScript Module src/analyzers/powershell.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">powershell <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">powershell provides JavaScript Module capabilities within the application layer. Total LOC: 57, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/powershell.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="proto JavaScript Module src/analyzers/proto.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">proto  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">proto provides JavaScript Module capabilities within the application layer. Total LOC: 32, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/analyzers/proto.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="python JavaScript Module src/analyzers/python.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">python <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">python provides JavaScript Module capabilities within the application layer. Total LOC: 68, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/analyzers/python.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="shell JavaScript Module src/analyzers/shell.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">shell  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">shell provides JavaScript Module capabilities within the application layer. Total LOC: 42, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/analyzers/shell.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="sql JavaScript Module src/analyzers/sql.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">sql  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">sql provides JavaScript Module capabilities within the application layer. Total LOC: 36, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/analyzers/sql.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="extension JavaScript Module src/extension.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">extension <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">extension provides JavaScript Module capabilities within the application layer. Total LOC: 123, Fan-In: 0, Fan-Out: 5.</div>
+      
+      <div class="card-file">src/extension.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="crossLanguage JavaScript Module src/graph/crossLanguage.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">crossLanguage  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">crossLanguage provides JavaScript Module capabilities within the application layer. Total LOC: 77, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/graph/crossLanguage.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="cycles JavaScript Module src/graph/cycles.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">cycles  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">cycles provides JavaScript Module capabilities within the application layer. Total LOC: 67, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/graph/cycles.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dependencyGraph JavaScript Module src/graph/dependencyGraph.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">dependencyGraph  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dependencyGraph provides JavaScript Module capabilities within the application layer. Total LOC: 23, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/graph/dependencyGraph.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="metrics JavaScript Module src/graph/metrics.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">metrics  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">metrics provides JavaScript Module capabilities within the application layer. Total LOC: 41, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/graph/metrics.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="workflows JavaScript Module src/graph/workflows.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">workflows  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">workflows provides JavaScript Module capabilities within the application layer. Total LOC: 74, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/graph/workflows.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="adapter JavaScript Module src/languages/adapter.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">adapter  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">adapter provides JavaScript Module capabilities within the application layer. Total LOC: 10, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/languages/adapter.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="comment-stripper JavaScript Module src/languages/comment-stripper.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">comment-stripper  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">comment-stripper provides JavaScript Module capabilities within the application layer. Total LOC: 220, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/languages/comment-stripper.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="encoding JavaScript Module src/languages/encoding.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">encoding  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">encoding provides JavaScript Module capabilities within the application layer. Total LOC: 48, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/languages/encoding.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="regex-engine JavaScript Module src/languages/regex-engine.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">regex-engine  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">regex-engine provides JavaScript Module capabilities within the application layer. Total LOC: 159, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/languages/regex-engine.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="archModel JavaScript Module src/model/archModel.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">archModel  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">archModel provides JavaScript Module capabilities within the application layer. Total LOC: 246, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/model/archModel.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="orchestrator JavaScript Module src/pipeline/orchestrator.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">orchestrator <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">orchestrator provides JavaScript Module capabilities within the application layer. Total LOC: 161, Fan-In: 0, Fan-Out: 30.</div>
+      
+      <div class="card-file">src/pipeline/orchestrator.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="renderer JavaScript Module src/report/renderer.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">renderer <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">renderer provides JavaScript Module capabilities within the application layer. Total LOC: 96, Fan-In: 0, Fan-Out: 18.</div>
+      
+      <div class="card-file">src/report/renderer.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="allComponents JavaScript Module src/report/sections/allComponents.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">allComponents  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">allComponents provides JavaScript Module capabilities within the application layer. Total LOC: 23, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/allComponents.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="appendix Node.js REST Route / Controller src/report/sections/appendix.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">appendix <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">appendix provides Node.js REST Route / Controller capabilities within the presentation layer. Total LOC: 39, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/appendix.ts</div>
+      <div class="tags">
+        <span class="tag tag-orange">Node.js REST Route / Controller</span>
+        <span class="tag tag-purple">Node.js / Express</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="architecture JavaScript Module src/report/sections/architecture.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">architecture  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">architecture provides JavaScript Module capabilities within the application layer. Total LOC: 50, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/report/sections/architecture.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="crossCutting JavaScript Module src/report/sections/crossCutting.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">crossCutting  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">crossCutting provides JavaScript Module capabilities within the application layer. Total LOC: 27, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/crossCutting.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="dataArchitecture JavaScript Module src/report/sections/dataArchitecture.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">dataArchitecture  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">dataArchitecture provides JavaScript Module capabilities within the application layer. Total LOC: 47, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/report/sections/dataArchitecture.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="deployment JavaScript Module src/report/sections/deployment.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">deployment  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">deployment provides JavaScript Module capabilities within the application layer. Total LOC: 32, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/deployment.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="interfaces JavaScript Module src/report/sections/interfaces.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">interfaces  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">interfaces provides JavaScript Module capabilities within the application layer. Total LOC: 34, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/interfaces.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="inventory JavaScript Module src/report/sections/inventory.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">inventory  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">inventory provides JavaScript Module capabilities within the application layer. Total LOC: 38, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/inventory.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="keyComponents JavaScript Module src/report/sections/keyComponents.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">keyComponents  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">keyComponents provides JavaScript Module capabilities within the application layer. Total LOC: 18, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/keyComponents.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="overview JavaScript Module src/report/sections/overview.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">overview  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">overview provides JavaScript Module capabilities within the application layer. Total LOC: 41, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/report/sections/overview.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="quality JavaScript Module src/report/sections/quality.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">quality  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">quality provides JavaScript Module capabilities within the application layer. Total LOC: 34, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/quality.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="relationships JavaScript Module src/report/sections/relationships.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">relationships  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">relationships provides JavaScript Module capabilities within the application layer. Total LOC: 42, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/report/sections/relationships.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="techStack JavaScript Module src/report/sections/techStack.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">techStack  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">techStack provides JavaScript Module capabilities within the application layer. Total LOC: 20, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/techStack.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="workflows JavaScript Module src/report/sections/workflows.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">workflows  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">workflows provides JavaScript Module capabilities within the application layer. Total LOC: 11, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/sections/workflows.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="diagrams JavaScript Module src/report/svg/diagrams.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">diagrams  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">diagrams provides JavaScript Module capabilities within the application layer. Total LOC: 72, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">src/report/svg/diagrams.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="components JavaScript Module src/report/templates/components.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">components  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">components provides JavaScript Module capabilities within the application layer. Total LOC: 142, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">src/report/templates/components.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="designSystemCss JavaScript Module src/report/templates/designSystemCss.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">designSystemCss  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">designSystemCss provides JavaScript Module capabilities within the application layer. Total LOC: 413, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/report/templates/designSystemCss.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="extensionCss JavaScript Module src/report/templates/extensionCss.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">extensionCss  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">extensionCss provides JavaScript Module capabilities within the application layer. Total LOC: 25, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/report/templates/extensionCss.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="escape JavaScript Module src/util/escape.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">escape  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">escape provides JavaScript Module capabilities within the application layer. Total LOC: 15, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/util/escape.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="fs JavaScript Module src/util/fs.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">fs  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">fs provides JavaScript Module capabilities within the application layer. Total LOC: 63, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">src/util/fs.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="ignore JavaScript Module src/util/ignore.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">ignore  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">ignore provides JavaScript Module capabilities within the application layer. Total LOC: 44, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">src/util/ignore.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="redact JavaScript Module src/util/redact.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">redact  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">redact provides JavaScript Module capabilities within the application layer. Total LOC: 38, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/util/redact.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="index Node.js REST Route / Controller test/fixtures/multi-service-suite/node-api/src/index.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">index <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">index provides Node.js REST Route / Controller capabilities within the presentation layer. Total LOC: 6, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/node-api/src/index.ts</div>
+      <div class="tags">
+        <span class="tag tag-orange">Node.js REST Route / Controller</span>
+        <span class="tag tag-purple">Node.js / Express</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="aiEnrichment.test JavaScript Module test/unit/aiEnrichment.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">aiEnrichment.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">aiEnrichment.test provides JavaScript Module capabilities within the application layer. Total LOC: 56, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">test/unit/aiEnrichment.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="commentStripper.test JavaScript Module test/unit/commentStripper.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">commentStripper.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">commentStripper.test provides JavaScript Module capabilities within the application layer. Total LOC: 33, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/unit/commentStripper.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="crossLanguage.test JavaScript Module test/unit/crossLanguage.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">crossLanguage.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">crossLanguage.test provides JavaScript Module capabilities within the application layer. Total LOC: 76, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">test/unit/crossLanguage.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="delphiDfm.test JavaScript Module test/unit/delphiDfm.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">delphiDfm.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">delphiDfm.test provides JavaScript Module capabilities within the application layer. Total LOC: 18, Fan-In: 0, Fan-Out: 3.</div>
+      
+      <div class="card-file">test/unit/delphiDfm.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="encoding.test JavaScript Module test/unit/encoding.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">encoding.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">encoding.test provides JavaScript Module capabilities within the application layer. Total LOC: 15, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/unit/encoding.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="generateWorkspaceReport.test JavaScript Module test/unit/generateWorkspaceReport.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">generateWorkspaceReport.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">generateWorkspaceReport.test provides JavaScript Module capabilities within the application layer. Total LOC: 25, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">test/unit/generateWorkspaceReport.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="graphWorkflows.test JavaScript Module test/unit/graphWorkflows.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">graphWorkflows.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">graphWorkflows.test provides JavaScript Module capabilities within the application layer. Total LOC: 48, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">test/unit/graphWorkflows.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="htmlReport.test JavaScript Module test/unit/htmlReport.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">htmlReport.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">htmlReport.test provides JavaScript Module capabilities within the application layer. Total LOC: 48, Fan-In: 0, Fan-Out: 4.</div>
+      
+      <div class="card-file">test/unit/htmlReport.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card green" data-search="model.test Repository / Model test/unit/model.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">model.test <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">model.test provides Repository / Model capabilities within the data layer. Total LOC: 12, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/unit/model.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-green">Repository / Model</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">data</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="redact.test JavaScript Module test/unit/redact.test.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">redact.test  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">redact.test provides JavaScript Module capabilities within the application layer. Total LOC: 15, Fan-In: 0, Fan-Out: 2.</div>
+      
+      <div class="card-file">test/unit/redact.test.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="vitest.config JavaScript Module vitest.config.ts">
+      <span class="card-icon">📦</span>
+      <div class="card-title">vitest.config  <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">vitest.config provides JavaScript Module capabilities within the application layer. Total LOC: 8, Fan-In: 0, Fan-Out: 1.</div>
+      
+      <div class="card-file">vitest.config.ts</div>
+      <div class="tags">
+        <span class="tag tag-purple">JavaScript Module</span>
+        <span class="tag tag-purple">Node.js / JS</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="main Flutter Screen / Widget test/fixtures/multi-service-suite/flutter-app/lib/main.dart">
+      <span class="card-icon">📦</span>
+      <div class="card-title">main <span style="font-size:10px;background:rgba(255,107,53,0.25);color:var(--orange);padding:2px 7px;border-radius:6px;margin-left:4px">Key Component</span> <span class="badge-conf">Extracted</span></div>
+      <div class="card-desc">main provides Flutter Screen / Widget capabilities within the presentation layer. Exports: MyApp, MyApp. Total LOC: 23, Fan-In: 0, Fan-Out: 2.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">MyApp</div>
+          <div class="state-desc">Exported symbol in main</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">MyApp</div>
+          <div class="state-desc">Exported symbol in main</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">test/fixtures/multi-service-suite/flutter-app/lib/main.dart</div>
+      <div class="tags">
+        <span class="tag tag-orange">Flutter Screen / Widget</span>
+        <span class="tag tag-purple">Dart/Flutter</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card blue" data-search=".vscodeignore Source Module .vscodeignore">
+      <span class="card-icon">📦</span>
+      <div class="card-title">.vscodeignore  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">.vscodeignore provides Source Module capabilities within the domain layer. Total LOC: 11, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">.vscodeignore</div>
+      <div class="tags">
+        <span class="tag tag-blue">Source Module</span>
+        <span class="tag tag-purple">Generic</span>
+        <span class="tag tag-blue">domain</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="BuildArch Architecture-20261003.archmodel Configuration Schema BuildArch-architecture-20261003.archmodel.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">BuildArch Architecture-20261003.archmodel  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">BuildArch Architecture-20261003.archmodel provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 2,841, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">BuildArch-architecture-20261003.archmodel.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="BuildArch Architecture-20261003 UI Style Template BuildArch-architecture-20261003.html">
+      <span class="card-icon">📦</span>
+      <div class="card-title">BuildArch Architecture-20261003  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">BuildArch Architecture-20261003 provides UI Style Template capabilities within the presentation layer. Exports: filterComponents, toggleTheme. Total LOC: 2,651, Fan-In: 0, Fan-Out: 0.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">filterComponents</div>
+          <div class="state-desc">Exported symbol in BuildArch Architecture-20261003</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">toggleTheme</div>
+          <div class="state-desc">Exported symbol in BuildArch Architecture-20261003</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">BuildArch-architecture-20261003.html</div>
+      <div class="tags">
+        <span class="tag tag-orange">UI Style Template</span>
+        <span class="tag tag-purple">.html</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card blue" data-search="CHANGELOG Documentation CHANGELOG.md">
+      <span class="card-icon">📦</span>
+      <div class="card-title">CHANGELOG  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">CHANGELOG provides Documentation capabilities within the domain layer. Total LOC: 9, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">CHANGELOG.md</div>
+      <div class="tags">
+        <span class="tag tag-blue">Documentation</span>
+        <span class="tag tag-purple">.md</span>
+        <span class="tag tag-blue">domain</span>
+      </div>
+    </div>
+  
+
+    <div class="card blue" data-search="LICENSE Source Module LICENSE">
+      <span class="card-icon">📦</span>
+      <div class="card-title">LICENSE  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">LICENSE provides Source Module capabilities within the domain layer. Total LOC: 17, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">LICENSE</div>
+      <div class="tags">
+        <span class="tag tag-blue">Source Module</span>
+        <span class="tag tag-purple">Generic</span>
+        <span class="tag tag-blue">domain</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Package Lock Configuration Schema package-lock.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Package Lock  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Package Lock provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 2,326, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">package-lock.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Package Configuration Schema package.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Package  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Package provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 156, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">package.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card blue" data-search="README Documentation README.md">
+      <span class="card-icon">📦</span>
+      <div class="card-title">README  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">README provides Documentation capabilities within the domain layer. Total LOC: 40, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">README.md</div>
+      <div class="tags">
+        <span class="tag tag-blue">Documentation</span>
+        <span class="tag tag-purple">.md</span>
+        <span class="tag tag-blue">domain</span>
+      </div>
+    </div>
+  
+
+    <div class="card orange" data-search="BuildArch Architecture-20261003 UI Style Template Requirements/BuildArch-architecture-20261003.html">
+      <span class="card-icon">📦</span>
+      <div class="card-title">BuildArch Architecture-20261003  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">BuildArch Architecture-20261003 provides UI Style Template capabilities within the presentation layer. Exports: filterComponents, toggleTheme. Total LOC: 2,651, Fan-In: 0, Fan-Out: 0.</div>
+      
+    <div class="state-grid" style="margin-top:10px;">
+      
+        <div class="state-item">
+          <div class="state-name">filterComponents</div>
+          <div class="state-desc">Exported symbol in BuildArch Architecture-20261003</div>
+        </div>
+      
+        <div class="state-item">
+          <div class="state-name">toggleTheme</div>
+          <div class="state-desc">Exported symbol in BuildArch Architecture-20261003</div>
+        </div>
+      
+    </div>
+  
+      <div class="card-file">Requirements/BuildArch-architecture-20261003.html</div>
+      <div class="tags">
+        <span class="tag tag-orange">UI Style Template</span>
+        <span class="tag tag-purple">.html</span>
+        <span class="tag tag-blue">presentation</span>
+      </div>
+    </div>
+  
+
+    <div class="card blue" data-search="BuildArch Extension Prompt Documentation Requirements/BuildArch_extension_prompt.md">
+      <span class="card-icon">📦</span>
+      <div class="card-title">BuildArch Extension Prompt  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">BuildArch Extension Prompt provides Documentation capabilities within the domain layer. Total LOC: 657, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">Requirements/BuildArch_extension_prompt.md</div>
+      <div class="tags">
+        <span class="tag tag-blue">Documentation</span>
+        <span class="tag tag-purple">.md</span>
+        <span class="tag tag-blue">domain</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Schema Configuration Schema src/model/schema.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Schema  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Schema provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 38, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/model/schema.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Cpp Configuration Schema src/rules/cpp.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Cpp  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Cpp provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 62, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/cpp.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Csharp Configuration Schema src/rules/csharp.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Csharp  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Csharp provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 62, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/csharp.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Dart Configuration Schema src/rules/dart.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Dart  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Dart provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 41, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/dart.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Dfm Configuration Schema src/rules/dfm.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Dfm  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Dfm provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 27, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/dfm.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Generic Configuration Schema src/rules/generic.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Generic  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Generic provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 20, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/generic.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Java Configuration Schema src/rules/java.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Java  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Java provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 62, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/java.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Js Ts Configuration Schema src/rules/js-ts.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Js Ts  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Js Ts provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 86, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/js-ts.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Pascal Configuration Schema src/rules/pascal.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Pascal  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Pascal provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 54, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/pascal.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Perl Configuration Schema src/rules/perl.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Perl  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Perl provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 41, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/perl.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Powershell Configuration Schema src/rules/powershell.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Powershell  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Powershell provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 41, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/powershell.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Python Configuration Schema src/rules/python.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Python  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Python provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 41, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/python.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Shell Configuration Schema src/rules/shell.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Shell  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Shell provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 27, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/shell.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Sql Configuration Schema src/rules/sql.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Sql  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Sql provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 34, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">src/rules/sql.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card purple" data-search="Project1 Unit Test Suite test/fixtures/delphi-project/Project1.dpr">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Project1  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Project1 provides Unit Test Suite capabilities within the application layer. Total LOC: 10, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">test/fixtures/delphi-project/Project1.dpr</div>
+      <div class="tags">
+        <span class="tag tag-purple">Unit Test Suite</span>
+        <span class="tag tag-purple">.dpr</span>
+        <span class="tag tag-blue">application</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Docker Compose Configuration Schema test/fixtures/multi-service-suite/docker-compose.yml">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Docker Compose  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Docker Compose provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 10, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/docker-compose.yml</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.yml</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Pubspec Configuration Schema test/fixtures/multi-service-suite/flutter-app/pubspec.yaml">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Pubspec  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Pubspec provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 10, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/flutter-app/pubspec.yaml</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.yaml</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Package Configuration Schema test/fixtures/multi-service-suite/node-api/package.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Package  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Package provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 8, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">test/fixtures/multi-service-suite/node-api/package.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+
+    <div class="card yellow" data-search="Tsconfig Configuration Schema tsconfig.json">
+      <span class="card-icon">📦</span>
+      <div class="card-title">Tsconfig  <span class="badge-conf">Inferred</span></div>
+      <div class="card-desc">Tsconfig provides Configuration Schema capabilities within the infrastructure layer. Total LOC: 19, Fan-In: 0, Fan-Out: 0.</div>
+      
+      <div class="card-file">tsconfig.json</div>
+      <div class="tags">
+        <span class="tag tag-yellow">Configuration Schema</span>
+        <span class="tag tag-purple">.json</span>
+        <span class="tag tag-blue">infrastructure</span>
+      </div>
+    </div>
+  
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="relationships">
+      <summary><div class="section-label">6. Relationships and Dependencies</div></summary>
+      
+      <h4 style="font-size:12px; font-weight:700; color:var(--muted); margin-bottom:10px;">COMPONENT DEPENDENCY MATRIX</h4>
+      <div class="diagram">
+        
+    <svg width="100%" height="470" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#0F0F1A" rx="12" />
+      <text x="130" y="160" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">Mainform</text>
+
+        <rect x="140" y="140" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="140" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="192" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">main</text>
+
+        <rect x="140" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="172" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="172" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="224" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">esbuild</text>
+
+        <rect x="140" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="204" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="204" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="256" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">generate_sample</text>
+
+        <rect x="140" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="236" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="236" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="288" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">budget</text>
+
+        <rect x="140" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="268" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="268" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="320" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">prompts</text>
+
+        <rect x="140" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="300" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="300" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="352" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">provider</text>
+
+        <rect x="140" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="332" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="332" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="384" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">vscodeLm</text>
+
+        <rect x="140" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="364" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="364" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="416" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">analyzer</text>
+
+        <rect x="140" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="396" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="396" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+<text x="130" y="448" fill="#ECECF5" font-family="JetBrains Mono" font-size="10" text-anchor="end">ci</text>
+
+        <rect x="140" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="172" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="204" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="236" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="268" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="300" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="332" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="364" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="396" y="428" width="30" height="30" rx="4" fill="#171728" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+        <rect x="428" y="428" width="30" height="30" rx="4" fill="#22223A" fill-opacity="0.4" stroke="rgba(255,255,255,0.05)" />
+      
+
+      <text x="156" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 156 125)">Mainform</text>
+    
+
+      <text x="188" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 188 125)">main</text>
+    
+
+      <text x="220" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 220 125)">esbuild</text>
+    
+
+      <text x="252" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 252 125)">generate_sam</text>
+    
+
+      <text x="284" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 284 125)">budget</text>
+    
+
+      <text x="316" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 316 125)">prompts</text>
+    
+
+      <text x="348" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 348 125)">provider</text>
+    
+
+      <text x="380" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 380 125)">vscodeLm</text>
+    
+
+      <text x="412" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 412 125)">analyzer</text>
+    
+
+      <text x="444" y="125" fill="#9090AE" font-family="JetBrains Mono" font-size="10" transform="rotate(-45 444 125)">ci</text>
+    
+    </svg>
+  
+      </div>
+
+      <h4 style="font-size:12px; font-weight:700; color:var(--muted); margin: 20px 0 10px;">INTER-COMPONENT RELATIONSHIP REGISTER</h4>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th>Kind</th>
+              <th>Label</th>
+              <th>Confidence</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><code>comp-delphi-mainform</code></td>
+      <td><code>external-NativeHelper.dll</code></td>
+      <td><span class="tag tag-purple">native-dll</span></td>
+      <td>P/Invoke DLL external call: NativeHelper.dll</td>
+      <td><span class="badge-conf">Extracted</span></td>
+      <td><code>test/fixtures/delphi-project/MainForm.pas:17</code></td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="interfaces">
+      <summary><div class="section-label">7. Interfaces and APIs</div></summary>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path / Endpoint</th>
+              <th>Kind</th>
+              <th>Handler</th>
+              <th>Evidence File</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><span class="tag tag-blue">GET</span></td>
+      <td><code>/analytics</code></td>
+      <td><span class="tag tag-purple">rest</span></td>
+      <td>main./analytics</td>
+      <td><code>test/fixtures/multi-service-suite/python-service/main.py:5</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><span class="tag tag-blue">GET</span></td>
+      <td><code>/orders</code></td>
+      <td><span class="tag tag-purple">rest</span></td>
+      <td>index./orders</td>
+      <td><code>test/fixtures/multi-service-suite/node-api/src/index.ts:5</code></td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="data-architecture">
+      <summary><div class="section-label">8. Data Architecture &amp; Persistence Stores</div></summary>
+      
+      <div class="arch-row row-3" style="margin-bottom: 24px;">
+        
+    <div class="ext-card">
+      <div class="ext-icon">🗄️</div>
+      <div>
+        <div class="ext-title">FDConnection1</div>
+        <div class="ext-desc">Technology: TFDConnection. Persistence storage unit. Evidence file: test/fixtures/delphi-project/MainForm.dfm</div>
+        <span class="ext-badge badge-free">RELATIONAL</span>
+      </div>
+    </div>
+  
+      </div>
+
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Data Store Name</th>
+              <th>Kind</th>
+              <th>Technology</th>
+              <th>Models / Entities</th>
+              <th>Evidence File</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><strong>FDConnection1</strong></td>
+      <td><span class="tag tag-green">relational</span></td>
+      <td>TFDConnection</td>
+      <td>N/A</td>
+      <td><code>test/fixtures/delphi-project/MainForm.dfm</code></td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="workflows">
+      <summary><div class="section-label">9. Major Workflows</div></summary>
+      <div class="card-desc">No end-to-end workflows detected.</div>
+    </details>
+  
+    
+    <details class="section" open id="deployment">
+      <summary><div class="section-label">10. Deployment and Infrastructure</div></summary>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Artifact</th>
+              <th>Type</th>
+              <th>Path</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><strong>docker-compose.yml</strong></td>
+      <td><span class="tag tag-yellow">docker</span></td>
+      <td><code>test/fixtures/multi-service-suite/docker-compose.yml</code></td>
+      <td>Multi-container Docker Compose topology specification</td>
+    </tr>
+  
+
+    <tr>
+      <td><strong>k8s.ts</strong></td>
+      <td><span class="tag tag-yellow">k8s</span></td>
+      <td><code>src/analyzers/k8s.ts</code></td>
+      <td>Kubernetes / Helm infrastructure specification</td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="cross-cutting">
+      <summary><div class="section-label">11. Cross-Cutting Concerns</div></summary>
+      <div class="arch-row row-2">
+        <div class="card purple">
+          <div class="card-title">🔐 Configuration &amp; Secret Keys (Names Only)</div>
+          <div class="card-desc">
+            <ul style="margin-left: 16px; line-height: 1.8;">
+              <li>No explicit secret names flagged.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card blue">
+          <div class="card-title">🧪 Testing &amp; Observability Strategy</div>
+          <div class="card-desc">
+            <p><strong>Test Coverage Ratio:</strong> 17%</p>
+            <p><strong>Untested Components:</strong> 88</p>
+          </div>
+        </div>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="quality">
+      <summary><div class="section-label">12. Quality, Risks and Technical Debt</div></summary>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Risk Finding</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><span class="tag chip-med">MEDIUM</span></td>
+      <td><strong>God Component Hotspot: BuildArch Architecture-20261003.archmodel</strong></td>
+      <td><span class="tag tag-purple">god-component</span></td>
+      <td>Component &#039;BuildArch Architecture-20261003.archmodel&#039; has high LOC (2841) and large public surface area (0 symbols), making it difficult to maintain and test.</td>
+      <td><code>BuildArch-architecture-20261003.archmodel.json</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><span class="tag chip-med">MEDIUM</span></td>
+      <td><strong>God Component Hotspot: BuildArch Architecture-20261003</strong></td>
+      <td><span class="tag tag-purple">god-component</span></td>
+      <td>Component &#039;BuildArch Architecture-20261003&#039; has high LOC (2651) and large public surface area (2 symbols), making it difficult to maintain and test.</td>
+      <td><code>BuildArch-architecture-20261003.html</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><span class="tag chip-med">MEDIUM</span></td>
+      <td><strong>God Component Hotspot: Package Lock</strong></td>
+      <td><span class="tag tag-purple">god-component</span></td>
+      <td>Component &#039;Package Lock&#039; has high LOC (2326) and large public surface area (0 symbols), making it difficult to maintain and test.</td>
+      <td><code>package-lock.json</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><span class="tag chip-med">MEDIUM</span></td>
+      <td><strong>God Component Hotspot: BuildArch Architecture-20261003</strong></td>
+      <td><span class="tag tag-purple">god-component</span></td>
+      <td>Component &#039;BuildArch Architecture-20261003&#039; has high LOC (2651) and large public surface area (2 symbols), making it difficult to maintain and test.</td>
+      <td><code>Requirements/BuildArch-architecture-20261003.html</code></td>
+    </tr>
+  
+
+    <tr>
+      <td><span class="tag chip-med">MEDIUM</span></td>
+      <td><strong>God Component Hotspot: BuildArch Extension Prompt</strong></td>
+      <td><span class="tag tag-purple">god-component</span></td>
+      <td>Component &#039;BuildArch Extension Prompt&#039; has high LOC (657) and large public surface area (0 symbols), making it difficult to maintain and test.</td>
+      <td><code>Requirements/BuildArch_extension_prompt.md</code></td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="tech-stack">
+      <summary><div class="section-label">13. Technology and Dependency Inventory</div></summary>
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size:12px; color:var(--muted); margin-bottom: 8px;">DETECTED FILE TYPES &amp; EXTENSIONS MATRIX</h4>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          
+    <span class="tag tag-yellow" style="padding: 4px 10px; font-size: 11px;">
+      (no extension) (2 files, 28 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .json (19 files, 5,986 LOC)
+    </span>
+  
+
+    <span class="tag tag-yellow" style="padding: 4px 10px; font-size: 11px;">
+      .html (2 files, 5,302 LOC)
+    </span>
+  
+
+    <span class="tag tag-yellow" style="padding: 4px 10px; font-size: 11px;">
+      .md (3 files, 706 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .js (2 files, 56 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .ts (72 files, 4,360 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .dfm (1 files, 18 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .pas (1 files, 20 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .dpr (1 files, 10 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .yml (1 files, 10 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .dart (1 files, 23 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .yaml (1 files, 10 LOC)
+    </span>
+  
+
+    <span class="tag tag-orange" style="padding: 4px 10px; font-size: 11px;">
+      .py (1 files, 8 LOC)
+    </span>
+  
+
+    <span class="tag tag-yellow" style="padding: 4px 10px; font-size: 11px;">
+      .txt (1 files, 3 LOC)
+    </span>
+  
+        </div>
+      </div>
+    </details>
+  
+    
+    <details class="section" open id="appendix">
+      <summary><div class="section-label">14. Appendix</div></summary>
+      
+      <div class="card dark3" style="margin-bottom: 20px;">
+        <div class="card-title">Generation Metadata</div>
+        <div class="card-desc">
+          <p><strong>Tool Version:</strong> BuildArch v0.1.0</p>
+          <p><strong>Generated At:</strong> 2026-10-03T17:14:18.735Z</p>
+          <p><strong>Mode:</strong> No AI (rule-based)</p>
+        </div>
+      </div>
+
+      <h4 style="font-size:12px; color:var(--muted); margin-bottom: 10px;">DETECTED BUT UNANALYZED FILE TYPES</h4>
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Extension</th>
+              <th>Count</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+    <tr>
+      <td><code>(no extension)</code></td>
+      <td>2</td>
+      <td>Detected but not analyzed in Tier 1/2</td>
+    </tr>
+  
+
+    <tr>
+      <td><code>.html</code></td>
+      <td>2</td>
+      <td>Detected but not analyzed in Tier 1/2</td>
+    </tr>
+  
+
+    <tr>
+      <td><code>.md</code></td>
+      <td>3</td>
+      <td>Detected but not analyzed in Tier 1/2</td>
+    </tr>
+  
+
+    <tr>
+      <td><code>.txt</code></td>
+      <td>1</td>
+      <td>Detected but not analyzed in Tier 1/2</td>
+    </tr>
+  
+          </tbody>
+        </table>
+      </div>
+    </details>
+  
+
+    
+    <div class="legend">
+      
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--orange)"></div>User Interface / Clients
+    </div>
+  
+
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--purple)"></div>API Gateway / Orchestration (Hub)
+    </div>
+  
+
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--blue)"></div>Domain Services &amp; Controllers
+    </div>
+  
+
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--green)"></div>Data Access &amp; Persistence
+    </div>
+  
+
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--yellow)"></div>Infrastructure &amp; Scripts
+    </div>
+  
+
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--red)"></div>Architecture Risks &amp; Hotspots
+    </div>
+  
+    </div>
+  
+    
+    <div class="footer">
+      BUILDARCH • Architecture &amp; Design Report<br>
+      Generated by BuildArch v0.1.0 on 2026-10-03T17:14:18.735Z • 6 project(s) • 106 component(s)
+    </div>
+  
+  </div>
+
+  <script>
+    function filterComponents() {
+      const q = document.getElementById('compSearch').value.toLowerCase();
+      const cards = document.querySelectorAll('#compContainer .card');
+      cards.forEach(card => {
+        const text = card.getAttribute('data-search') || '';
+        card.style.display = text.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      root.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+    }
+  </script>
+</body>
+</html>

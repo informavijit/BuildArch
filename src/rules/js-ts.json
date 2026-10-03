@@ -1,0 +1,86 @@
+{
+  "language": "javascript",
+  "extensions": [".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".vue", ".svelte"],
+  "rules": [
+    {
+      "id": "js-import",
+      "kind": "import",
+      "pattern": "^\\s*import\\s+.*\\s+from\\s+['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "js-require",
+      "kind": "import",
+      "pattern": "(?:const|let|var)\\s+.*=\\s*require\\s*\\(\\s*['\"]([^'\"]+)['\"]\\s*\\)",
+      "flags": "gi",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "react-component-func",
+      "kind": "declaration",
+      "pattern": "(?:export\\s+)?(?:default\\s+)?function\\s+([A-Z][a-zA-Z0-9_]+)\\s*\\(",
+      "flags": "g",
+      "captureGroups": { "name": 1, "type": "React Component" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "react-component-const",
+      "kind": "declaration",
+      "pattern": "(?:export\\s+)?const\\s+([A-Z][a-zA-Z0-9_]+)\\s*:\\s*React\\.(?:FC|FunctionComponent)?\\s*=|const\\s+([A-Z][a-zA-Z0-9_]+)\\s*=\\s*(?:React\\.)?(?:memo|forwardRef)?\\s*\\(",
+      "flags": "g",
+      "captureGroups": { "name": 1, "type": "React Component" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "react-route",
+      "kind": "route",
+      "pattern": "<Route\\s+[^>]*path=['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 1, "type": "React Route" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "angular-decorator",
+      "kind": "declaration",
+      "pattern": "@(Component|Injectable|NgModule|Directive|Pipe)\\s*\\(\\s*\\{",
+      "flags": "gi",
+      "captureGroups": { "name": 1, "type": "Angular Decorator" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "angularjs-module-controller",
+      "kind": "declaration",
+      "pattern": "\\.controller\\s*\\(\\s*['\"]([^'\"]+)['\"]|\\.directive\\s*\\(\\s*['\"]([^'\"]+)['\"]|\\.factory\\s*\\(\\s*['\"]([^'\"]+)['\"]|\\.service\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 1, "type": "AngularJS Component" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "express-node-route",
+      "kind": "route",
+      "pattern": "(?:app|router|fastify|server)\\.(get|post|put|delete|patch|use)\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 2, "method": 1, "type": "Node/Express Route" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "nestjs-controller",
+      "kind": "route",
+      "pattern": "@(Controller|Get|Post|Put|Delete|Patch)\\s*\\(\\s*['\"]?([^'\")]+)?['\"]?\\s*\\)",
+      "flags": "gi",
+      "captureGroups": { "name": 2, "method": 1, "type": "NestJS Route" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "http-fetch-axios",
+      "kind": "external",
+      "pattern": "(?:fetch|axios(?:\\.(?:get|post|put|delete))?|\\$http\\.(?:get|post|put|delete))\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "flags": "gi",
+      "captureGroups": { "name": 1, "type": "HTTP Client Call" },
+      "confidence": "Extracted"
+    }
+  ]
+}

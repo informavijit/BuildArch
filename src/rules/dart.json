@@ -1,0 +1,41 @@
+{
+  "language": "dart",
+  "extensions": [".dart"],
+  "rules": [
+    {
+      "id": "dart-import",
+      "kind": "import",
+      "pattern": "^\\s*import\\s+['\"]([^'\"]+)['\"]",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "dart-class",
+      "kind": "declaration",
+      "pattern": "\\bclass\\s+([a-zA-Z0-9_]+)\\s*(?:extends|with|implements)?",
+      "captureGroups": { "name": 1, "type": "class" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "flutter-widget",
+      "kind": "declaration",
+      "pattern": "\\bclass\\s+([a-zA-Z0-9_]+)\\s+extends\\s+(StatelessWidget|StatefulWidget|ConsumerWidget)",
+      "captureGroups": { "name": 1, "type": 2 },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "dart-http-client",
+      "kind": "external",
+      "pattern": "(?:http|dio|Dio)\\.(?:get|post|put|delete)\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+      "captureGroups": { "name": 1, "type": "HTTP Client" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "dart-main",
+      "kind": "entry",
+      "pattern": "\\bvoid\\s+main\\s*\\(\\s*\\)",
+      "captureGroups": { "name": "main" },
+      "confidence": "Extracted"
+    }
+  ]
+}

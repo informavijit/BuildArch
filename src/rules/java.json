@@ -1,0 +1,62 @@
+{
+  "language": "java",
+  "extensions": [".java"],
+  "rules": [
+    {
+      "id": "java-package",
+      "kind": "declaration",
+      "pattern": "^\\s*package\\s+([a-zA-Z0-9_.]+)\\s*;",
+      "captureGroups": { "name": 1, "type": "package" },
+      "confidence": "Extracted",
+      "description": "Package declaration"
+    },
+    {
+      "id": "java-import",
+      "kind": "import",
+      "pattern": "^\\s*import\\s+(?:static\\s+)?([a-zA-Z0-9_.*]+)\\s*;",
+      "captureGroups": { "name": 1 },
+      "confidence": "Extracted",
+      "description": "Import statement"
+    },
+    {
+      "id": "java-class",
+      "kind": "declaration",
+      "pattern": "\\b(public|protected|private)?\\s*(?:static\\s+)?(?:final\\s+)?(class|interface|enum|record)\\s+([a-zA-Z0-9_]+)",
+      "captureGroups": { "name": 3, "type": 2 },
+      "confidence": "Extracted",
+      "description": "Class or Interface declaration"
+    },
+    {
+      "id": "spring-controller",
+      "kind": "route",
+      "pattern": "@(RestController|Controller|RequestMapping)\\s*(?:\\(([^)]+)\\))?",
+      "captureGroups": { "name": 1, "detail": 2 },
+      "confidence": "Extracted",
+      "description": "Spring Controller"
+    },
+    {
+      "id": "spring-endpoint",
+      "kind": "route",
+      "pattern": "@(GetMapping|PostMapping|PutMapping|DeleteMapping|PatchMapping)\\s*(?:\\(([^)]+)\\))?",
+      "captureGroups": { "name": 2, "method": 1 },
+      "confidence": "Extracted",
+      "description": "Spring REST endpoint"
+    },
+    {
+      "id": "jpa-entity",
+      "kind": "data",
+      "pattern": "@(Entity|Table|Repository)\\s*(?:\\(([^)]+)\\))?",
+      "captureGroups": { "name": 1, "detail": 2 },
+      "confidence": "Extracted",
+      "description": "JPA Entity or Repository"
+    },
+    {
+      "id": "java-main",
+      "kind": "entry",
+      "pattern": "public\\s+static\\s+void\\s+main\\s*\\(\\s*String\\s*\\[\\s*\\]",
+      "captureGroups": { "name": "main" },
+      "confidence": "Extracted",
+      "description": "Main entry point"
+    }
+  ]
+}

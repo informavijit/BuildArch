@@ -1,0 +1,27 @@
+{
+  "language": "shell",
+  "extensions": [".sh", ".bash", ".zsh", ".bat", ".cmd"],
+  "rules": [
+    {
+      "id": "shell-source",
+      "kind": "import",
+      "pattern": "^\\s*(?:source|\\.)\\s+['\"]?([^'\"\\s]+)['\"]?",
+      "captureGroups": { "name": 1, "type": "sourced-script" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "shell-function",
+      "kind": "declaration",
+      "pattern": "^\\s*(?:function\\s+)?([a-zA-Z0-9_-]+)\\s*\\(\\s*\\)",
+      "captureGroups": { "name": 1, "type": "function" },
+      "confidence": "Extracted"
+    },
+    {
+      "id": "shell-curl-wget",
+      "kind": "external",
+      "pattern": "\\b(?:curl|wget)\\s+.*['\"]?https?://([^'\"\\s]+)['\"]?",
+      "captureGroups": { "name": 1, "type": "HTTP Request" },
+      "confidence": "Extracted"
+    }
+  ]
+}
