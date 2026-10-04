@@ -2,7 +2,7 @@
   "name": "buildarch",
   "displayName": "BuildArch",
   "description": "100% free workspace architecture & design analyzer. Supports Java, C#/.NET, C/C++, Delphi/Object Pascal, Python, JavaScript, TypeScript, React.js, Angular, Node.js, Dart/Flutter, PowerShell, Perl, Go, Rust, Kotlin, Swift, PHP, Ruby, Shell/Bash, SQL, Docker, Kubernetes, CI/CD, gRPC Proto, OpenAPI.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "AvijitKumarTewary",
   "icon": "icon.png",
   "license": "MIT",
@@ -23,17 +23,17 @@
     "commands": [
       {
         "command": "buildarch.workspace",
-        "title": "BuildArch: Workspace",
+        "title": "Workspace",
         "category": "BuildArch"
       },
       {
         "command": "buildarch.workspaceAi",
-        "title": "BuildArch: Workspace AI",
+        "title": "Workspace AI",
         "category": "BuildArch"
       },
       {
         "command": "buildarch.openLastReport",
-        "title": "BuildArch: Open Last Report",
+        "title": "Open Last Report",
         "category": "BuildArch"
       }
     ],
